@@ -208,7 +208,7 @@ public class grpcClient
 							e.printStackTrace();
 						}
 						break;
-					case "gen-prime": //rpc GeneratePrimeNumbers(Task) returns (stream Number) {}
+					case "gen-prime": //rpc GeneratePrimeNumbers(MyTask) returns (stream Number) {}
 						new PrimeNumbersFinderExecutor(streamTesterBlockingStub).start();
 						break;
 					case "count-prime": //rpc CountPrimeNumbers(stream Number) returns (Report) {}
@@ -244,12 +244,12 @@ class PrimeNumbersFinderExecutor extends Thread
 	
 	public void run()
 	{
-		Task request = Task.newBuilder().setMax(28).build();
+		MyTask request = MyTask.newBuilder().setMax(28).build();
 
 		Iterator<Number> numbers;
 		try {
 			System.out.println("Calling GeneratePrimeNumbers(" + request.getMax() + ")...");
-			numbers = streamTesterBlockingStub.generatePrimeNumbers(request); //rpc GeneratePrimeNumbers(Task) returns (stream Number) {}
+			numbers = streamTesterBlockingStub.generatePrimeNumbers(request); //rpc GeneratePrimeNumbers(MyTask) returns (stream Number) {}
 			while(numbers.hasNext())
 			{
 				//wypisuje się z odstępami czasowymi, więc strumieniowanie DZIAŁA

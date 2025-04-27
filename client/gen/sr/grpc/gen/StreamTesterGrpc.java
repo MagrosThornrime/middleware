@@ -15,27 +15,27 @@ public final class StreamTesterGrpc {
   public static final java.lang.String SERVICE_NAME = "streaming.StreamTester";
 
   // Static method descriptors that strictly reflect the proto.
-  private static volatile io.grpc.MethodDescriptor<sr.grpc.gen.Task,
+  private static volatile io.grpc.MethodDescriptor<sr.grpc.gen.MyTask,
       sr.grpc.gen.Number> getGeneratePrimeNumbersMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
       fullMethodName = SERVICE_NAME + '/' + "GeneratePrimeNumbers",
-      requestType = sr.grpc.gen.Task.class,
+      requestType = sr.grpc.gen.MyTask.class,
       responseType = sr.grpc.gen.Number.class,
       methodType = io.grpc.MethodDescriptor.MethodType.SERVER_STREAMING)
-  public static io.grpc.MethodDescriptor<sr.grpc.gen.Task,
+  public static io.grpc.MethodDescriptor<sr.grpc.gen.MyTask,
       sr.grpc.gen.Number> getGeneratePrimeNumbersMethod() {
-    io.grpc.MethodDescriptor<sr.grpc.gen.Task, sr.grpc.gen.Number> getGeneratePrimeNumbersMethod;
+    io.grpc.MethodDescriptor<sr.grpc.gen.MyTask, sr.grpc.gen.Number> getGeneratePrimeNumbersMethod;
     if ((getGeneratePrimeNumbersMethod = StreamTesterGrpc.getGeneratePrimeNumbersMethod) == null) {
       synchronized (StreamTesterGrpc.class) {
         if ((getGeneratePrimeNumbersMethod = StreamTesterGrpc.getGeneratePrimeNumbersMethod) == null) {
           StreamTesterGrpc.getGeneratePrimeNumbersMethod = getGeneratePrimeNumbersMethod =
-              io.grpc.MethodDescriptor.<sr.grpc.gen.Task, sr.grpc.gen.Number>newBuilder()
+              io.grpc.MethodDescriptor.<sr.grpc.gen.MyTask, sr.grpc.gen.Number>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.SERVER_STREAMING)
               .setFullMethodName(generateFullMethodName(SERVICE_NAME, "GeneratePrimeNumbers"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  sr.grpc.gen.Task.getDefaultInstance()))
+                  sr.grpc.gen.MyTask.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   sr.grpc.gen.Number.getDefaultInstance()))
               .setSchemaDescriptor(new StreamTesterMethodDescriptorSupplier("GeneratePrimeNumbers"))
@@ -142,7 +142,7 @@ public final class StreamTesterGrpc {
 
     /**
      */
-    default void generatePrimeNumbers(sr.grpc.gen.Task request,
+    default void generatePrimeNumbers(sr.grpc.gen.MyTask request,
         io.grpc.stub.StreamObserver<sr.grpc.gen.Number> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getGeneratePrimeNumbersMethod(), responseObserver);
     }
@@ -184,7 +184,7 @@ public final class StreamTesterGrpc {
 
     /**
      */
-    public void generatePrimeNumbers(sr.grpc.gen.Task request,
+    public void generatePrimeNumbers(sr.grpc.gen.MyTask request,
         io.grpc.stub.StreamObserver<sr.grpc.gen.Number> responseObserver) {
       io.grpc.stub.ClientCalls.asyncServerStreamingCall(
           getChannel().newCall(getGeneratePrimeNumbersMethod(), getCallOptions()), request, responseObserver);
@@ -219,7 +219,7 @@ public final class StreamTesterGrpc {
      */
     @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/10918")
     public io.grpc.stub.BlockingClientCall<?, sr.grpc.gen.Number>
-        generatePrimeNumbers(sr.grpc.gen.Task request) {
+        generatePrimeNumbers(sr.grpc.gen.MyTask request) {
       return io.grpc.stub.ClientCalls.blockingV2ServerStreamingCall(
           getChannel(), getGeneratePrimeNumbersMethod(), getCallOptions(), request);
     }
@@ -253,7 +253,7 @@ public final class StreamTesterGrpc {
     /**
      */
     public java.util.Iterator<sr.grpc.gen.Number> generatePrimeNumbers(
-        sr.grpc.gen.Task request) {
+        sr.grpc.gen.MyTask request) {
       return io.grpc.stub.ClientCalls.blockingServerStreamingCall(
           getChannel(), getGeneratePrimeNumbersMethod(), getCallOptions(), request);
     }
@@ -297,7 +297,7 @@ public final class StreamTesterGrpc {
     public void invoke(Req request, io.grpc.stub.StreamObserver<Resp> responseObserver) {
       switch (methodId) {
         case METHODID_GENERATE_PRIME_NUMBERS:
-          serviceImpl.generatePrimeNumbers((sr.grpc.gen.Task) request,
+          serviceImpl.generatePrimeNumbers((sr.grpc.gen.MyTask) request,
               (io.grpc.stub.StreamObserver<sr.grpc.gen.Number>) responseObserver);
           break;
         default:
@@ -325,7 +325,7 @@ public final class StreamTesterGrpc {
           getGeneratePrimeNumbersMethod(),
           io.grpc.stub.ServerCalls.asyncServerStreamingCall(
             new MethodHandlers<
-              sr.grpc.gen.Task,
+              sr.grpc.gen.MyTask,
               sr.grpc.gen.Number>(
                 service, METHODID_GENERATE_PRIME_NUMBERS)))
         .addMethod(

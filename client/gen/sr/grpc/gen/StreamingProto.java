@@ -15,10 +15,10 @@ public final class StreamingProto {
         (com.google.protobuf.ExtensionRegistryLite) registry);
   }
   static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_streaming_Task_descriptor;
+    internal_static_streaming_MyTask_descriptor;
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_streaming_Task_fieldAccessorTable;
+      internal_static_streaming_MyTask_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
     internal_static_streaming_Number_descriptor;
   static final 
@@ -38,24 +38,24 @@ public final class StreamingProto {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\017streaming.proto\022\tstreaming\"\023\n\004Task\022\013\n\003" +
-      "max\030\001 \001(\005\"\027\n\006Number\022\r\n\005value\030\001 \001(\005\".\n\006Re" +
-      "port\022\r\n\005count\030\001 \001(\005\022\025\n\rprocessorTime\030\002 \001" +
-      "(\0032\215\001\n\014StreamTester\022>\n\024GeneratePrimeNumb" +
-      "ers\022\017.streaming.Task\032\021.streaming.Number\"" +
-      "\0000\001\022=\n\021CountPrimeNumbers\022\021.streaming.Num" +
-      "ber\032\021.streaming.Report\"\000(\001B\037\n\013sr.grpc.ge" +
-      "nB\016StreamingProtoP\001b\006proto3"
+      "\n\017streaming.proto\022\tstreaming\"\025\n\006MyTask\022\013" +
+      "\n\003max\030\001 \001(\005\"\027\n\006Number\022\r\n\005value\030\001 \001(\005\".\n\006" +
+      "Report\022\r\n\005count\030\001 \001(\005\022\025\n\rprocessorTime\030\002" +
+      " \001(\0032\217\001\n\014StreamTester\022@\n\024GeneratePrimeNu" +
+      "mbers\022\021.streaming.MyTask\032\021.streaming.Num" +
+      "ber\"\0000\001\022=\n\021CountPrimeNumbers\022\021.streaming" +
+      ".Number\032\021.streaming.Report\"\000(\001B\037\n\013sr.grp" +
+      "c.genB\016StreamingProtoP\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
         });
-    internal_static_streaming_Task_descriptor =
+    internal_static_streaming_MyTask_descriptor =
       getDescriptor().getMessageTypes().get(0);
-    internal_static_streaming_Task_fieldAccessorTable = new
+    internal_static_streaming_MyTask_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_streaming_Task_descriptor,
+        internal_static_streaming_MyTask_descriptor,
         new java.lang.String[] { "Max", });
     internal_static_streaming_Number_descriptor =
       getDescriptor().getMessageTypes().get(1);

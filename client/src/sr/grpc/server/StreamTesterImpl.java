@@ -3,14 +3,14 @@ package sr.grpc.server;
 import io.grpc.stub.StreamObserver;
 
 import sr.grpc.gen.StreamTesterGrpc.StreamTesterImplBase;
-import sr.grpc.gen.Task;
+import sr.grpc.gen.MyTask;
 import sr.grpc.gen.Number;
 import sr.grpc.gen.Report;
 
 public class StreamTesterImpl extends StreamTesterImplBase
 {
 	@Override
-	public void generatePrimeNumbers(Task request, StreamObserver<Number> responseObserver) 
+	public void generatePrimeNumbers(MyTask request, StreamObserver<Number> responseObserver) 
 	{
 		System.out.println("generatePrimeNumbers is starting (max=" + request.getMax() + ")");
 		for (int i = 0; i < request.getMax(); i++) {
