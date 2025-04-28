@@ -30,7 +30,8 @@ namespace server.Sr.Grpc.EventServer
                 Services =
                 {
                     Calculator.BindService(new CalculatorImpl()),
-                    StreamTester.BindService(new StreamTesterImpl())
+                    StreamTester.BindService(new StreamTesterImpl()),
+                    FantasySubscriber.BindService(new FantasyImpl())
                     // Add more services here if needed
                 },
                 Ports = { new ServerPort(endpoint.Address.ToString(), endpoint.Port, ServerCredentials.Insecure) }
