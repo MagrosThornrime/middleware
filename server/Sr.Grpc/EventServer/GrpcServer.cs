@@ -60,7 +60,7 @@ namespace server.Sr.Grpc.EventServer
 
             var server = new GrpcServer(logger);
             server.Start();
-
+            
             // Keep the server alive until shutdown
             await Task.Delay(-1);
         }
