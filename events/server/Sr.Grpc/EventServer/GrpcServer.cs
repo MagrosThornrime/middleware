@@ -14,6 +14,9 @@ namespace server.Sr.Grpc.EventServer
 
         private Server _server = null!;
         private readonly ILogger<GrpcServer> _logger;
+        
+        private FantasyImpl _fantasyImpl = new FantasyImpl();
+        private WeatherImpl _weatherImpl = new WeatherImpl();
 
         private GrpcServer(ILogger<GrpcServer> logger)
         {
@@ -29,10 +32,8 @@ namespace server.Sr.Grpc.EventServer
             {
                 Services =
                 {
-                    Calculator.BindService(new CalculatorImpl()),
-                    StreamTester.BindService(new StreamTesterImpl()),
-                    FantasySubscriber.BindService(new FantasyImpl()),
-                    WeatherSubscriber.BindService(new WeatherImpl())
+                    FantasySubscriber.BindService(_fantasyImpl),
+                    WeatherSubscriber.BindService(_weatherImpl)
                 },
                 Ports = { new ServerPort(endpoint.Address.ToString(), endpoint.Port, ServerCredentials.Insecure) }
             };
@@ -58,8 +59,14 @@ namespace server.Sr.Grpc.EventServer
 
             var server = new GrpcServer(logger);
             server.Start();
-            
-            await Task.Delay(-1);
+
+            while (true)
+            {
+                server._fantasyImpl.GenerateEvents();
+                server._weatherImpl.GenerateEvents();
+                await Task.Delay(4);
+                
+            }
         }
     }
 }

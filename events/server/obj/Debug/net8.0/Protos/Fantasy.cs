@@ -26,8 +26,8 @@ namespace Sr.Grpc.gen {
           string.Concat(
             "ChRQcm90b3MvZmFudGFzeS5wcm90bxIHZmFudGFzeSKTAQoTRmFudGFzeVN1",
             "YnNjcmlwdGlvbhIsCglldmVudFR5cGUYASABKA4yGS5mYW50YXN5LkZhbnRh",
-            "c3lFdmVudFR5cGUSEAoIbG9jYXRpb24YAyABKAkSFAoMbWluaW11bUxldmVs",
-            "GAQgASgFEhQKDG1heGltdW1MZXZlbBgFIAEoBRIQCghmYWN0aW9ucxgGIAMo",
+            "c3lFdmVudFR5cGUSEAoIbG9jYXRpb24YAiABKAkSFAoMbWluaW11bUxldmVs",
+            "GAMgASgFEhQKDG1heGltdW1MZXZlbBgEIAEoBRIQCghmYWN0aW9ucxgFIAMo",
             "CSJPCgxGYW50YXN5RXZlbnQSKgoEdHlwZRgBIAEoCzIcLmZhbnRhc3kuRmFu",
             "dGFzeVN1YnNjcmlwdGlvbhITCgtkZXNjcmlwdGlvbhgCIAEoCSpGChBGYW50",
             "YXN5RXZlbnRUeXBlEgoKBkJBVFRMRRAAEgsKB0RFQkFURVMQARILCgdEVU5H",
@@ -116,7 +116,7 @@ namespace Sr.Grpc.gen {
     }
 
     /// <summary>Field number for the "location" field.</summary>
-    public const int LocationFieldNumber = 3;
+    public const int LocationFieldNumber = 2;
     private string location_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -128,7 +128,7 @@ namespace Sr.Grpc.gen {
     }
 
     /// <summary>Field number for the "minimumLevel" field.</summary>
-    public const int MinimumLevelFieldNumber = 4;
+    public const int MinimumLevelFieldNumber = 3;
     private int minimumLevel_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -140,7 +140,7 @@ namespace Sr.Grpc.gen {
     }
 
     /// <summary>Field number for the "maximumLevel" field.</summary>
-    public const int MaximumLevelFieldNumber = 5;
+    public const int MaximumLevelFieldNumber = 4;
     private int maximumLevel_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -152,9 +152,9 @@ namespace Sr.Grpc.gen {
     }
 
     /// <summary>Field number for the "factions" field.</summary>
-    public const int FactionsFieldNumber = 6;
+    public const int FactionsFieldNumber = 5;
     private static readonly pb::FieldCodec<string> _repeated_factions_codec
-        = pb::FieldCodec.ForString(50);
+        = pb::FieldCodec.ForString(42);
     private readonly pbc::RepeatedField<string> factions_ = new pbc::RepeatedField<string>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -217,15 +217,15 @@ namespace Sr.Grpc.gen {
         output.WriteEnum((int) EventType);
       }
       if (Location.Length != 0) {
-        output.WriteRawTag(26);
+        output.WriteRawTag(18);
         output.WriteString(Location);
       }
       if (MinimumLevel != 0) {
-        output.WriteRawTag(32);
+        output.WriteRawTag(24);
         output.WriteInt32(MinimumLevel);
       }
       if (MaximumLevel != 0) {
-        output.WriteRawTag(40);
+        output.WriteRawTag(32);
         output.WriteInt32(MaximumLevel);
       }
       factions_.WriteTo(output, _repeated_factions_codec);
@@ -244,15 +244,15 @@ namespace Sr.Grpc.gen {
         output.WriteEnum((int) EventType);
       }
       if (Location.Length != 0) {
-        output.WriteRawTag(26);
+        output.WriteRawTag(18);
         output.WriteString(Location);
       }
       if (MinimumLevel != 0) {
-        output.WriteRawTag(32);
+        output.WriteRawTag(24);
         output.WriteInt32(MinimumLevel);
       }
       if (MaximumLevel != 0) {
-        output.WriteRawTag(40);
+        output.WriteRawTag(32);
         output.WriteInt32(MaximumLevel);
       }
       factions_.WriteTo(ref output, _repeated_factions_codec);
@@ -323,19 +323,19 @@ namespace Sr.Grpc.gen {
             EventType = (global::Sr.Grpc.gen.FantasyEventType) input.ReadEnum();
             break;
           }
-          case 26: {
+          case 18: {
             Location = input.ReadString();
             break;
           }
-          case 32: {
+          case 24: {
             MinimumLevel = input.ReadInt32();
             break;
           }
-          case 40: {
+          case 32: {
             MaximumLevel = input.ReadInt32();
             break;
           }
-          case 50: {
+          case 42: {
             factions_.AddEntriesFrom(input, _repeated_factions_codec);
             break;
           }
@@ -358,19 +358,19 @@ namespace Sr.Grpc.gen {
             EventType = (global::Sr.Grpc.gen.FantasyEventType) input.ReadEnum();
             break;
           }
-          case 26: {
+          case 18: {
             Location = input.ReadString();
             break;
           }
-          case 32: {
+          case 24: {
             MinimumLevel = input.ReadInt32();
             break;
           }
-          case 40: {
+          case 32: {
             MaximumLevel = input.ReadInt32();
             break;
           }
-          case 50: {
+          case 42: {
             factions_.AddEntriesFrom(ref input, _repeated_factions_codec);
             break;
           }

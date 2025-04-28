@@ -31,6 +31,8 @@
 
 package sr.grpc.client;
 
+import fantasy.Fantasy;
+import fantasy.FantasySubscriberGrpc;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.Status;
@@ -40,56 +42,43 @@ import io.grpc.stub.ClientResponseObserver;
 import io.grpc.stub.StreamObserver;
 
 import sr.grpc.gen.*;
-import sr.grpc.gen.CalculatorGrpc.CalculatorBlockingStub;
-import sr.grpc.gen.CalculatorGrpc.CalculatorFutureStub;
-import sr.grpc.gen.CalculatorGrpc.CalculatorStub;
-import sr.grpc.gen.Number;
-import sr.grpc.gen.StreamTesterGrpc.StreamTesterBlockingStub;
-import sr.grpc.gen.StreamTesterGrpc.StreamTesterStub;
 
-import java.util.Arrays;
-import java.util.Iterator;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Random;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
-import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.Futures;
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.MoreExecutors;
+import weather.Weather;
+import weather.WeatherSubscriberGrpc;
 
 
 public class grpcClient 
 {
 	private static final Logger logger = Logger.getLogger(grpcClient.class.getName());
 
+	private final Random _generator = new Random();
+
 	private final ManagedChannel channel;
 
-	private final CalculatorBlockingStub calcBlockingStub;
-	private final CalculatorStub calcNonBlockingStub;
-	private final CalculatorFutureStub calcFutureStub;
-	private final AdvancedCalculatorGrpc.AdvancedCalculatorBlockingStub advCalcBlockingStub;
+	private final WeatherSubscriberGrpc.WeatherSubscriberStub _weatherStub;
+	private final FantasySubscriberGrpc.FantasySubscriberStub _fantasySubscriberStub;
 
-	private final StreamTesterBlockingStub streamTesterBlockingStub;
-	private final StreamTesterStub streamTesterNonBlockingStub;
+	private final HashMap<Integer, WeatherExecutor> _weatherExecutors = new HashMap<>();
+	private final HashMap<Integer, FantasyExecutor> _fantasyExecutors = new HashMap<>();
 
-	private PrimeNumbersFinderExecutor executor;
 
 	/** Construct client connecting to HelloWorld server at {@code host:port}. */
-	public grpcClient(String remoteHost, int remotePort) 
+	public grpcClient(String remoteHost, int remotePort)
 	{
 		channel = ManagedChannelBuilder.forAddress(remoteHost, remotePort)
 				.usePlaintext() // Channels are secure by default (via SSL/TLS). For the example we disable TLS to avoid needing certificates.
 				.build();
 
-		calcBlockingStub = CalculatorGrpc.newBlockingStub(channel);
-		calcNonBlockingStub = CalculatorGrpc.newStub(channel);
-		calcFutureStub = CalculatorGrpc.newFutureStub(channel);
-
-		advCalcBlockingStub = AdvancedCalculatorGrpc.newBlockingStub(channel);
-
-		streamTesterBlockingStub = StreamTesterGrpc.newBlockingStub(channel);
-		streamTesterNonBlockingStub = StreamTesterGrpc.newStub(channel); //Blocking stubs do not support client-streaming or bidirectional-streaming RPCs.
+		_weatherStub = WeatherSubscriberGrpc.newStub(channel);
+		_fantasySubscriberStub = FantasySubscriberGrpc.newStub(channel);
 	}
 	
 	
@@ -104,176 +93,152 @@ public class grpcClient
 		channel.shutdown().awaitTermination(5, TimeUnit.SECONDS);
 	}
 
+	private Fantasy.FantasySubscription _GetFantasyParams(String line) {
+		line = line.strip();
+		String[] parts = line.split(",");
+		Fantasy.FantasySubscription.Builder builder = Fantasy.FantasySubscription.newBuilder()
+				.setEventType(Fantasy.FantasyEventType.valueOf(parts[1]))
+				.setLocation(parts[2])
+				.setMinimumLevel(Integer.parseInt(parts[3]))
+				.setMaximumLevel(Integer.parseInt(parts[4]));
+
+		for(int i = 5; i < parts.length; i++) {
+			builder.addFactions(parts[i]);
+		}
+		return builder.build();
+	}
+
+	private Weather.WeatherSubscription _GetWeatherParams(String line) {
+		line = line.strip();
+		String[] parts = line.split(",");
+		Weather.WeatherSubscription.Builder builder = Weather.WeatherSubscription.newBuilder()
+				.setLocation(parts[1]);
+		return builder.build();
+	}
+
+	private WeatherExecutor _AddWeatherExecutor(Weather.WeatherSubscription params, WeatherSubscriberGrpc.WeatherSubscriberStub stub) {
+		Integer id;
+		do {
+			id = _generator.nextInt();
+		}while(_weatherExecutors.containsKey(id));
+		_weatherExecutors.put(id, new WeatherExecutor(params, stub));
+		System.out.println("Added weather executor: " + id);
+		return _weatherExecutors.get(id);
+	}
+
+	private FantasyExecutor _AddFantasyExecutor(Fantasy.FantasySubscription params, FantasySubscriberGrpc.FantasySubscriberStub stub) {
+		Integer id;
+		do {
+			id = _generator.nextInt();
+		}while(_fantasyExecutors.containsKey(id));
+		_fantasyExecutors.put(id, new FantasyExecutor(params, stub));
+		System.out.println("Added fantasy executor: " + id);
+		return _fantasyExecutors.get(id);
+	}
+
+	private Integer _GetKey(String line) {
+		line = line.strip();
+		String[] parts = line.split(",");
+		return Integer.parseInt(parts[1]);
+	}
+
 
 	public void test() throws InterruptedException
 	{
 		String line = null;
 		java.io.BufferedReader in = new java.io.BufferedReader(new java.io.InputStreamReader(System.in));
-		ListenableFuture<ArithmeticOpResult> future1 = null;
 
 		do 	{
 			try	{
 				System.out.print("==> ");
 				System.out.flush();
 				line = in.readLine();
-				switch (line) {
-					case "add1": {
-						ArithmeticOpArguments request = ArithmeticOpArguments.newBuilder().setArg1(66).setArg2(65505).build();
-						ArithmeticOpResult result = calcBlockingStub.add(request);
-						System.out.println(result.getRes());
-						break;
+				if(line.startsWith("/sub fantasy")){
+					try{
+						var params = _GetFantasyParams(line);
+						var executor = _AddFantasyExecutor(params, _fantasySubscriberStub);
+						executor.start();
 					}
-					case "add2": {
-						ArithmeticOpArguments request = ArithmeticOpArguments.newBuilder().setArg1(4444).setArg2(5555).build();
-						ArithmeticOpResult result = calcBlockingStub.add(request);
-						System.out.println(result.getRes());
-						break;
+					catch(ArrayIndexOutOfBoundsException e){
+						System.out.println("wrong num of parameters");
 					}
-					case "add-deadline1":
-						try {
-							ArithmeticOpArguments request = ArithmeticOpArguments.newBuilder().setArg1(44).setArg2(55).build();
-							ArithmeticOpResult result = calcBlockingStub.withDeadlineAfter(100, TimeUnit.MILLISECONDS).add(request);
-							System.out.println(result.getRes());
-						} catch (io.grpc.StatusRuntimeException e) {
-							System.out.println("DEADLINE EXCEEDED");
-						}
-						break;
-					case "add-deadline2":
-						try {
-							ArithmeticOpArguments request = ArithmeticOpArguments.newBuilder().setArg1(4444).setArg2(5555).build();
-							ArithmeticOpResult result = calcBlockingStub.withDeadlineAfter(100, TimeUnit.MILLISECONDS).add(request);
-							System.out.println(result.getRes());
-						} catch (io.grpc.StatusRuntimeException e) {
-							System.out.println("DEADLINE EXCEEDED");
-						}
-						break;
-					case "complex-sum": {
-						ComplexArithmeticOpArguments request = ComplexArithmeticOpArguments.newBuilder()
-								.setOptype(OperationType.SUM).addAllArgs(Arrays.asList(4.0, 5.0, 3.1415926))
-								.build();
-						ComplexArithmeticOpResult result = advCalcBlockingStub.complexOperation(request);
-						System.out.println(result.getRes());
-						break;
+				}
+				else if(line.startsWith("/sub weather")){
+					try{
+						var params = _GetWeatherParams(line);
+						var executor = _AddWeatherExecutor(params, _weatherStub);
+						executor.start();
 					}
-					case "complex-avg": {
-						ComplexArithmeticOpArguments request = ComplexArithmeticOpArguments.newBuilder()
-								.setOptype(OperationType.AVG).addAllArgs(Arrays.asList(4.0, 5.0, 8.5))
-								.build();
-						ComplexArithmeticOpResult result = advCalcBlockingStub.complexOperation(request);
-						System.out.println(result.getRes());
-						break;
+					catch(ArrayIndexOutOfBoundsException e){
+						System.out.println("wrong num of parameters");
 					}
-					case "nonblock-add": {
-						ArithmeticOpArguments request = ArithmeticOpArguments.newBuilder().setArg1(4444).setArg2(5555).build();
-						StreamObserver<ArithmeticOpResult> responseObserver = new StreamObserver<ArithmeticOpResult>() {
-							@Override
-							public void onError(Throwable t) {
-								System.out.println("gRPC ERROR");
-							}
-
-							@Override
-							public void onCompleted() {
-							}
-
-							@Override
-							public void onNext(ArithmeticOpResult res) {
-								System.out.println(res.getRes() + " (non-block)");
-							}
-						};
-						calcNonBlockingStub.add(request, responseObserver);
-						break;
-					}
-					case "future-add-1": {
-						ArithmeticOpArguments request = ArithmeticOpArguments.newBuilder().setArg1(4444).setArg2(5555).build();
-						ListenableFuture<ArithmeticOpResult> future2 = calcFutureStub.add(request);
-						Futures.addCallback(future2, new FutureCallback<ArithmeticOpResult>() {
-							@Override
-							public void onSuccess(ArithmeticOpResult result) {
-								System.out.println(result.getRes() + " (future)");
-							}
-
-							@Override
-							public void onFailure(Throwable throwable) {
-								System.out.println("gRPC ERROR");
-							}
-						}, MoreExecutors.directExecutor());
-						break;
-					}
-					case "future-add-2a": {
-						ArithmeticOpArguments request = ArithmeticOpArguments.newBuilder().setArg1(4444).setArg2(5555).build();
-						future1 = calcFutureStub.add(request);
-						break;
-					}
-					case "future-add-2b":
-						try {
-							ArithmeticOpResult result = future1.get();
-							System.out.println(result.getRes() + " (future)");
-						} catch (InterruptedException | ExecutionException e) {
-							e.printStackTrace();
-						}
-						break;
-					case "gen-prime": //rpc GeneratePrimeNumbers(MyTask) returns (stream Number) {}
-						if(executor != null && executor.isAlive()){
-							System.out.println("check");
+				}
+				else if(line.startsWith("/unsub fantasy")){
+					var key = _GetKey(line);
+					if(_fantasyExecutors.containsKey(key)) {
+						var executor = _fantasyExecutors.get(key);
+						if(executor.isAlive()){
 							executor.isStopped = true;
 							wait(10);
 						}
-						executor = new PrimeNumbersFinderExecutor(streamTesterNonBlockingStub);
-						executor.start();
-						break;
-					case "count-prime": //rpc CountPrimeNumbers(stream Number) returns (Report) {}
-
-						new PrimeCounterExecutor(streamTesterNonBlockingStub).start();
-						break;
-					case "stop-count":
-						executor.isStopped = true;
-					case "x":
-					case "":
-						break;
-					default:
-						System.out.println("???");
-						break;
+						System.out.println("Unsub fantasy: " + key);
+					}
+				}
+				else if(line.startsWith("/unsub weather")){
+					var key = _GetKey(line);
+					if(_weatherExecutors.containsKey(key)) {
+						var executor = _weatherExecutors.get(key);
+						if(executor.isAlive()){
+							executor.isStopped = true;
+							wait(10);
+						}
+						System.out.println("Unsub fantasy: " + key);
+					}
+				}
+				else if(line.equals("x") || line.equals("")) {
+					continue;
+				}
+				else {
+					System.out.println("???");
 				}
 			}
 			catch (java.io.IOException ex) {
 				System.err.println(ex);
 			}
 		}
-		while (!line.equals("x"));
+		while (!Objects.equals(line, "x"));
 		
 		shutdown();
 	}
 }
 
-
-class PrimeNumbersFinderExecutor extends Thread
-{
+class WeatherExecutor extends Thread{
 	boolean isStopped = false;
-	StreamTesterStub streamTesterNonBlockingStub;  // ⚡ Use the non-blocking stub
+	WeatherSubscriberGrpc.WeatherSubscriberStub stub;
+	Weather.WeatherSubscription params;
 
-	PrimeNumbersFinderExecutor(StreamTesterStub streamTesterNonBlockingStub)
+	WeatherExecutor(Weather.WeatherSubscription params, WeatherSubscriberGrpc.WeatherSubscriberStub stub)
 	{
-		this.streamTesterNonBlockingStub = streamTesterNonBlockingStub;
+		this.params = params;
+		this.stub = stub;
 	}
 
 	public void run()
 	{
-		MyTask request = MyTask.newBuilder().setMax(28).build();
+		System.out.println("Sending subscription request...");
 
-		System.out.println("Calling GeneratePrimeNumbers(" + request.getMax() + ")...");
-
-		ClientResponseObserver<MyTask, Number> responseObserver = new ClientResponseObserver<MyTask, Number>()
-		{
-			private ClientCallStreamObserver<MyTask> requestStream;
+		ClientResponseObserver<Weather.WeatherSubscription, Weather.WeatherEvent> responseObserver =
+				new ClientResponseObserver<>() {
+			private ClientCallStreamObserver<Weather.WeatherSubscription> requestStream;
 
 			@Override
-			public void beforeStart(ClientCallStreamObserver<MyTask> requestStream) {
+			public void beforeStart(ClientCallStreamObserver<Weather.WeatherSubscription> requestStream) {
 				this.requestStream = requestStream;
 			}
 
 			@Override
-			public void onNext(Number number) {
-				System.out.println("Received prime number: " + number.getValue());
+			public void onNext(Weather.WeatherEvent event) {
+				System.out.println("Received weather event: " + event);
 
 				if (isStopped) {
 					System.out.println("Cancelling from client...");
@@ -298,67 +263,61 @@ class PrimeNumbersFinderExecutor extends Thread
 			}
 		};
 
-		streamTesterNonBlockingStub.generatePrimeNumbers(request, responseObserver);
+		stub.subscribe(params, responseObserver);
 	}
 }
 
-	
-	
-class PrimeCounterExecutor extends Thread
-{
-	public boolean isStopped;
-	StreamTesterStub streamTesterNonBlockingStub;
-	
-	PrimeCounterExecutor(StreamTesterStub streamTesterNonBlockingStub)
+class FantasyExecutor extends Thread{
+	boolean isStopped = false;
+	FantasySubscriberGrpc.FantasySubscriberStub stub;
+	Fantasy.FantasySubscription params;
+
+	FantasyExecutor(Fantasy.FantasySubscription params, FantasySubscriberGrpc.FantasySubscriberStub stub)
 	{
-		this.streamTesterNonBlockingStub = streamTesterNonBlockingStub;
+		this.params = params;
+		this.stub = stub;
 	}
-	
+
 	public void run()
 	{
-		StreamObserver<Report> responseObserver = new StreamObserver<Report>()
-		{
-			int count = -1;
-			@Override public void onNext(Report result)	{ //wołane tylko raz - na końcu wywołania
-				count = result.getCount();
-			}
-			@Override public void onError(Throwable t) {
-				System.out.println("RPC ERROR");
-			}
-			@Override public void onCompleted()	{
-				System.out.println("Result received: found " + count + " prime numbers");
-			}
-		};
-		
-		StreamObserver<Number> requestObserver = streamTesterNonBlockingStub.countPrimeNumbers(responseObserver); //rpc CountPrimeNumbers(stream Number) returns (Report) {}
-		try {
-			for (int i = 0; i < 100; ++i) {
-				if(isStopped){
-					requestObserver.onCompleted();
-					return;
-				}
-				if(isPrime(i)) {
-					Number number = Number.newBuilder().setValue(i).build();	
-					System.out.println("Streaming data to the service... (" + number.getValue() + ")");
-					requestObserver.onNext(number);
-				}
-			}
-		} catch (RuntimeException e) {
-			// Cancel RPC
-			requestObserver.onError(e);
-			throw e;
-		}
-		// Mark the end of requests
-		requestObserver.onCompleted();
+		System.out.println("Sending subscription request...");
+
+		ClientResponseObserver<Fantasy.FantasySubscription, Fantasy.FantasyEvent> responseObserver =
+				new ClientResponseObserver<>() {
+					private ClientCallStreamObserver<Fantasy.FantasySubscription> requestStream;
+
+					@Override
+					public void beforeStart(ClientCallStreamObserver<Fantasy.FantasySubscription> requestStream) {
+						this.requestStream = requestStream;
+					}
+
+					@Override
+					public void onNext(Fantasy.FantasyEvent event) {
+						System.out.println("Received fantasy event: " + event);
+
+						if (isStopped) {
+							System.out.println("Cancelling from client...");
+							requestStream.cancel("Client no longer interested", null);
+						}
+					}
+
+					@Override
+					public void onError(Throwable t) {
+						Status status = Status.fromThrowable(t);
+						if(status.getCode() == Status.Code.CANCELLED){
+							System.out.println("Client was cancelled");
+						}
+						else{
+							System.err.println("Client got error: " + Status.fromThrowable(t));
+						}
+					}
+
+					@Override
+					public void onCompleted() {
+						System.out.println("Server finished sending primes.");
+					}
+				};
+
+		stub.subscribe(params, responseObserver);
 	}
-
-	
-
-	private boolean isPrime(int val)
-	{
-		if(val % 2 == 0) return false; //oczywiście to nieprawda ;)
-		try { Thread.sleep(1000); } catch(java.lang.InterruptedException ex) { } 
-		return true; //oczywiście to nieprawda ;)
-	}
-
 }

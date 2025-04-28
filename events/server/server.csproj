@@ -16,12 +16,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Protobuf Include="Protos\calculator.proto">
-          <Generator>MSBuild:Compile</Generator>
-        </Protobuf>
-        <Protobuf Include="Protos\streaming.proto">
-            <Generator>MSBuild:Compile</Generator>
-        </Protobuf>
         <Protobuf Include="Protos\fantasy.proto">
             <Generator>MSBuild:Compile</Generator>
         </Protobuf>

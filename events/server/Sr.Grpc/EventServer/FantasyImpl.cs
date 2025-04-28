@@ -42,7 +42,9 @@ public class FantasyImpl : FantasySubscriber.FantasySubscriberBase
 
     private FantasyEvent _GenerateFantasyEvent()
     {
-        var type = (FantasyEventType)_generator.Next(0, 4);
+        List<FantasyEventType> values = [FantasyEventType.Battle, FantasyEventType.Debates,
+        FantasyEventType.Dungeon, FantasyEventType.Festival];
+        var type = values[_generator.Next(0, values.Count)];
         var minimumLevel = _generator.Next(18, 24);
         var maximumLevel = _generator.Next(30, 69);
         var location = _locations[_generator.Next(_locations.Count)];
@@ -131,6 +133,7 @@ public class FantasyImpl : FantasySubscriber.FantasySubscriberBase
                     await responseStream.WriteAsync(eventData);
                 }
 
+                await Task.Delay(TimeSpan.FromSeconds(5));
             }
 
         }

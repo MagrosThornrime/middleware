@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+option csharp_namespace = "Sr.Grpc.gen";
+
+package fantasy;
+
+enum FantasyEventType {
+    BATTLE = 0;
+    DEBATES = 1;
+    DUNGEON = 2;
+    FESTIVAL = 3;
+}
+
+message FantasySubscription{
+  FantasyEventType eventType = 1;
+  string location = 2;
+  int32 minimumLevel = 3;
+  int32 maximumLevel = 4;
+  repeated string factions = 5;
+}
+
+message FantasyEvent{
+  FantasySubscription type = 1;
+  string description = 2;
+}
+
+service FantasySubscriber {
+  rpc Subscribe(FantasySubscription) returns (stream FantasyEvent);
+}

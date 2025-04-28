@@ -2,6 +2,7 @@ using Grpc.Core;
 using Sr.Grpc.gen;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -21,9 +22,11 @@ public class WeatherImpl : WeatherSubscriber.WeatherSubscriberBase
     
     private WeatherEvent _GenerateWeatherEvent()
     {
-        var type = (WeatherType)_generator.Next(0, 3);
+        List<WeatherType> values = [WeatherType.Rain, WeatherType.Storm, WeatherType.Sun,
+            WeatherType.Clouds, WeatherType.Fog];
+        var type = values[_generator.Next(0, values.Count)];
         var location = _locations[_generator.Next(0, _locations.Count)];
-        var temperature = _generator.Next(-10, 33);
+        var temperature = -10.0f + (float)_generator.NextDouble() * 44.0f;
         return new WeatherEvent
         {
             Location = location,
@@ -62,13 +65,19 @@ public class WeatherImpl : WeatherSubscriber.WeatherSubscriberBase
                 var toSend = new List<WeatherEvent>();
                 lock (_lock)
                 {
-                    toSend.AddRange(_events.Where(weatherEvent => request.Location == weatherEvent.Location));
+                    var found = _events.Find(weatherEvent => request.Location == weatherEvent.Location);
+                    if (found is not null)
+                    {
+                        toSend.Add(found);
+                    }
                 }
 
                 foreach (var eventData in toSend)
                 {
                     await responseStream.WriteAsync(eventData);
                 }
+                
+                await Task.Delay(TimeSpan.FromSeconds(5));
 
             }
 

@@ -5,18 +5,18 @@ option csharp_namespace = "Sr.Grpc.gen";
 package fantasy;
 
 enum FantasyEventType {
-    BATTLE = 0;
-    DEBATES = 1;
-    DUNGEON = 2;
-    FESTIVAL = 3;
+  BATTLE = 0;
+  DEBATES = 1;
+  DUNGEON = 2;
+  FESTIVAL = 3;
 }
 
 message FantasySubscription{
   FantasyEventType eventType = 1;
-  string location = 3;
-  int32 minimumLevel = 4;
-  int32 maximumLevel = 5;
-  repeated string factions = 6;
+  string location = 2;
+  int32 minimumLevel = 3;
+  int32 maximumLevel = 4;
+  repeated string factions = 5;
 }
 
 message FantasyEvent{
