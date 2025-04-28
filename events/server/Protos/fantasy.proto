@@ -2,7 +2,7 @@ syntax = "proto3";
 
 option csharp_namespace = "Sr.Grpc.gen";
 
-package event;
+package fantasy;
 
 enum FantasyEventType {
     BATTLE = 0;

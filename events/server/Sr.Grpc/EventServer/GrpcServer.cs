@@ -12,15 +12,15 @@ namespace server.Sr.Grpc.EventServer
         private const string Address = "127.0.0.5";
         private const int Port = 50051;
 
-        private Server _server;
+        private Server _server = null!;
         private readonly ILogger<GrpcServer> _logger;
 
-        public GrpcServer(ILogger<GrpcServer> logger)
+        private GrpcServer(ILogger<GrpcServer> logger)
         {
             _logger = logger;
         }
 
-        public void Start()
+        private void Start()
         {
             var ipAddress = IPAddress.Parse(Address);
             var endpoint = new IPEndPoint(ipAddress, Port);
@@ -31,30 +31,27 @@ namespace server.Sr.Grpc.EventServer
                 {
                     Calculator.BindService(new CalculatorImpl()),
                     StreamTester.BindService(new StreamTesterImpl()),
-                    FantasySubscriber.BindService(new FantasyImpl())
-                    // Add more services here if needed
+                    FantasySubscriber.BindService(new FantasyImpl()),
+                    WeatherSubscriber.BindService(new WeatherImpl())
                 },
                 Ports = { new ServerPort(endpoint.Address.ToString(), endpoint.Port, ServerCredentials.Insecure) }
             };
 
             _server.Start();
-            _logger.LogInformation($"Server started, listening on {Address}:{Port}");
+            _logger.LogInformation("Server started, listening on {S}:{I}", Address, Port);
 
             AppDomain.CurrentDomain.ProcessExit += (_, __) => Stop();
             Console.CancelKeyPress += (_, __) => Stop();
         }
 
-        public void Stop()
+        private void Stop()
         {
-            if (_server != null)
-            {
-                _logger.LogInformation("Shutting down gRPC server...");
-                _server.ShutdownAsync().Wait();
-                _logger.LogInformation("Server shut down.");
-            }
+            _logger.LogInformation("Shutting down gRPC server...");
+            _server.ShutdownAsync().Wait();
+            _logger.LogInformation("Server shut down.");
         }
 
-        public static async Task Main(string[] args)
+        public static async Task Main()
         {
             using var loggerFactory = LoggerFactory.Create(builder => builder.AddConsole());
             var logger = loggerFactory.CreateLogger<GrpcServer>();
@@ -62,7 +59,6 @@ namespace server.Sr.Grpc.EventServer
             var server = new GrpcServer(logger);
             server.Start();
             
-            // Keep the server alive until shutdown
             await Task.Delay(-1);
         }
     }

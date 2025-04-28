@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace server.Sr.Grpc.EventServer
-{
-    public class FantasyImpl : FantasySubscriber.FantasySubscriberBase
+namespace server.Sr.Grpc.EventServer;
+
+public class FantasyImpl : FantasySubscriber.FantasySubscriberBase
 {
     private readonly object _lock = new();
     private readonly Random _generator = new();
@@ -48,8 +48,8 @@ namespace server.Sr.Grpc.EventServer
         var location = _locations[_generator.Next(_locations.Count)];
         var interestedFactions = _generator.Next(1, 3);
         var chosenFactions = _factions.OrderBy(x => _generator.Next())
-                                                .Take(interestedFactions)
-                                                .ToList();
+            .Take(interestedFactions)
+            .ToList();
         var newSubscriptionData = new FantasySubscription{
             EventType = type,
             MinimumLevel = minimumLevel,
@@ -68,7 +68,7 @@ namespace server.Sr.Grpc.EventServer
         };
     }
 
-    private static bool _eventTypeMatch(FantasySubscription eventSubscription, FantasySubscription clientSubscription)
+    private static bool _EventTypeMatch(FantasySubscription eventSubscription, FantasySubscription clientSubscription)
     {
         if (clientSubscription.EventType != eventSubscription.EventType)
         {
@@ -123,7 +123,7 @@ namespace server.Sr.Grpc.EventServer
                 var toSend = new List<FantasyEvent>();
                 lock (_lock)
                 {
-                    toSend.AddRange(_events.Where(eventData => _eventTypeMatch(eventData.Type, request)));
+                    toSend.AddRange(_events.Where(eventData => _EventTypeMatch(eventData.Type, request)));
                 }
 
                 foreach (var eventData in toSend)
@@ -143,10 +143,8 @@ namespace server.Sr.Grpc.EventServer
             Console.WriteLine($"Fantasy: an error occured: {ex.StatusCode}");
         }
         
-        Console.WriteLine("generatePrimeNumbers completed");
+        Console.WriteLine("Fantasy: subscription end");
     }
     
     
 }
-}
-

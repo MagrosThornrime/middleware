@@ -25,5 +25,8 @@
         <Protobuf Include="Protos\fantasy.proto">
             <Generator>MSBuild:Compile</Generator>
         </Protobuf>
+        <Protobuf Include="Protos\weather.proto">
+            <Generator>MSBuild:Compile</Generator>
+        </Protobuf>
     </ItemGroup>
 </Project>

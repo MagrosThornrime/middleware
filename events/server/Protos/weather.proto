@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+option csharp_namespace = "Sr.Grpc.gen";
+
+enum WeatherType{
+  RAIN = 0;
+  STORM = 1;
+  SUN = 2;
+  CLOUDS = 3;
+  FOG = 4;
+}
+
+package weather;
+
+message WeatherSubscription{
+  string location = 1;
+}
+
+message WeatherEvent{
+  string location = 1;
+  WeatherType type = 2;
+  float temperature = 3;
+}
+
+service WeatherSubscriber {
+  rpc Subscribe(WeatherSubscription) returns (stream WeatherEvent);
+}
