@@ -8,15 +8,30 @@ public class StreamTesterImpl : StreamTester.StreamTesterBase
     public override async Task GeneratePrimeNumbers(MyTask request, IServerStreamWriter<Number> responseStream, ServerCallContext context)
     {
         Console.WriteLine($"generatePrimeNumbers is starting (max={request.Max})");
-
-        for (int i = 0; i < request.Max; i++)
+        try
         {
-            if (IsPrime(i))
+            for (int i = 0; i < request.Max; i++)
             {
-                var number = new Number { Value = i };
-                await responseStream.WriteAsync(number);
+                if (context.CancellationToken.IsCancellationRequested)
+                {
+                    Console.WriteLine("Server detected: Client cancelled!");
+                    return; // Stop immediately
+                }
+
+                if (IsPrime(i))
+                {
+                    var number = new Number { Value = i };
+                    await responseStream.WriteAsync(number);
+                }
+
+                await Task.Delay(500);
             }
         }
+        catch (RpcException ex) when (ex.StatusCode == StatusCode.Cancelled)
+        {
+            Console.WriteLine("Server detected: Client cancelled!");
+        }
+
 
         Console.WriteLine("generatePrimeNumbers completed");
     }

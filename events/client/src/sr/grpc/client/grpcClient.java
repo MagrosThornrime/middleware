@@ -33,7 +33,10 @@ package sr.grpc.client;
 
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
+import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
+import io.grpc.stub.ClientCallStreamObserver;
+import io.grpc.stub.ClientResponseObserver;
 import io.grpc.stub.StreamObserver;
 
 import sr.grpc.gen.*;
@@ -70,6 +73,7 @@ public class grpcClient
 	private final StreamTesterBlockingStub streamTesterBlockingStub;
 	private final StreamTesterStub streamTesterNonBlockingStub;
 
+	private PrimeNumbersFinderExecutor executor;
 
 	/** Construct client connecting to HelloWorld server at {@code host:port}. */
 	public grpcClient(String remoteHost, int remotePort) 
@@ -209,11 +213,20 @@ public class grpcClient
 						}
 						break;
 					case "gen-prime": //rpc GeneratePrimeNumbers(MyTask) returns (stream Number) {}
-						new PrimeNumbersFinderExecutor(streamTesterBlockingStub).start();
+						if(executor != null && executor.isAlive()){
+							System.out.println("check");
+							executor.isStopped = true;
+							wait(10);
+						}
+						executor = new PrimeNumbersFinderExecutor(streamTesterNonBlockingStub);
+						executor.start();
 						break;
 					case "count-prime": //rpc CountPrimeNumbers(stream Number) returns (Report) {}
+
 						new PrimeCounterExecutor(streamTesterNonBlockingStub).start();
 						break;
+					case "stop-count":
+						executor.isStopped = true;
 					case "x":
 					case "":
 						break;
@@ -234,39 +247,66 @@ public class grpcClient
 
 
 class PrimeNumbersFinderExecutor extends Thread
-{	
-	StreamTesterBlockingStub streamTesterBlockingStub;
-	
-	PrimeNumbersFinderExecutor(StreamTesterBlockingStub streamTesterBlockingStub)
+{
+	boolean isStopped = false;
+	StreamTesterStub streamTesterNonBlockingStub;  // ⚡ Use the non-blocking stub
+
+	PrimeNumbersFinderExecutor(StreamTesterStub streamTesterNonBlockingStub)
 	{
-		this.streamTesterBlockingStub = streamTesterBlockingStub;
+		this.streamTesterNonBlockingStub = streamTesterNonBlockingStub;
 	}
-	
+
 	public void run()
 	{
 		MyTask request = MyTask.newBuilder().setMax(28).build();
 
-		Iterator<Number> numbers;
-		try {
-			System.out.println("Calling GeneratePrimeNumbers(" + request.getMax() + ")...");
-			numbers = streamTesterBlockingStub.generatePrimeNumbers(request); //rpc GeneratePrimeNumbers(MyTask) returns (stream Number) {}
-			while(numbers.hasNext())
-			{
-				//wypisuje się z odstępami czasowymi, więc strumieniowanie DZIAŁA
-				Number num = numbers.next();
-				System.out.println("Service returned: " + num.getValue());
+		System.out.println("Calling GeneratePrimeNumbers(" + request.getMax() + ")...");
+
+		ClientResponseObserver<MyTask, Number> responseObserver = new ClientResponseObserver<MyTask, Number>()
+		{
+			private ClientCallStreamObserver<MyTask> requestStream;
+
+			@Override
+			public void beforeStart(ClientCallStreamObserver<MyTask> requestStream) {
+				this.requestStream = requestStream;
 			}
-			System.out.println("GeneratePrimeNumbers completed");
-		} catch (StatusRuntimeException ex) {
-			System.err.println("RPC failed: " + ex.getStatus());
-			return;
-		}
+
+			@Override
+			public void onNext(Number number) {
+				System.out.println("Received prime number: " + number.getValue());
+
+				if (isStopped) {
+					System.out.println("Cancelling from client...");
+					requestStream.cancel("Client no longer interested", null);
+				}
+			}
+
+			@Override
+			public void onError(Throwable t) {
+				Status status = Status.fromThrowable(t);
+				if(status.getCode() == Status.Code.CANCELLED){
+					System.out.println("Client was cancelled");
+				}
+				else{
+					System.err.println("Client got error: " + Status.fromThrowable(t));
+				}
+			}
+
+			@Override
+			public void onCompleted() {
+				System.out.println("Server finished sending primes.");
+			}
+		};
+
+		streamTesterNonBlockingStub.generatePrimeNumbers(request, responseObserver);
 	}
 }
+
 	
 	
 class PrimeCounterExecutor extends Thread
 {
+	public boolean isStopped;
 	StreamTesterStub streamTesterNonBlockingStub;
 	
 	PrimeCounterExecutor(StreamTesterStub streamTesterNonBlockingStub)
@@ -276,7 +316,7 @@ class PrimeCounterExecutor extends Thread
 	
 	public void run()
 	{
-		StreamObserver<Report> responseObserver = new StreamObserver<Report>() 
+		StreamObserver<Report> responseObserver = new StreamObserver<Report>()
 		{
 			int count = -1;
 			@Override public void onNext(Report result)	{ //wołane tylko raz - na końcu wywołania
@@ -293,6 +333,10 @@ class PrimeCounterExecutor extends Thread
 		StreamObserver<Number> requestObserver = streamTesterNonBlockingStub.countPrimeNumbers(responseObserver); //rpc CountPrimeNumbers(stream Number) returns (Report) {}
 		try {
 			for (int i = 0; i < 100; ++i) {
+				if(isStopped){
+					requestObserver.onCompleted();
+					return;
+				}
 				if(isPrime(i)) {
 					Number number = Number.newBuilder().setValue(i).build();	
 					System.out.println("Streaming data to the service... (" + number.getValue() + ")");
