@@ -1,3 +1,5 @@
-*/.idea/
-events/server/obj/*
-events/server/bin/*
+events/server/.idea/
+events/server/obj/
+events/server/bin/
+events/client/.idea/
+events/client/out/
