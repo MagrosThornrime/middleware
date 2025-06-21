@@ -40,8 +40,6 @@ import io.grpc.stub.ClientCallStreamObserver;
 import io.grpc.stub.ClientResponseObserver;
 
 
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.Random;
@@ -50,8 +48,6 @@ import java.util.logging.Logger;
 
 import weather.Weather;
 import weather.WeatherSubscriberGrpc;
-
-import java.io.PrintStream;
 
 
 public class grpcClient 
@@ -176,21 +172,15 @@ public class grpcClient
 					if(_fantasyExecutors.containsKey(key)) {
 						var executor = _fantasyExecutors.get(key);
 						if(executor.isAlive()){
-							executor.isStopped = true;
-							wait(10);
+							executor.receivedStopSignal = true;
 						}
-						System.out.println("Unsub fantasy: " + key);
 					}
 				}
 				else if(line.startsWith("unsub_weather")){
 					var key = _GetKey(line);
 					if(_weatherExecutors.containsKey(key)) {
 						var executor = _weatherExecutors.get(key);
-						if(executor.isAlive()){
-							executor.isStopped = true;
-							wait(10);
-						}
-						System.out.println("Unsub fantasy: " + key);
+						executor.receivedStopSignal = true;
 					}
 				}
 				else if(!(line.equals("x") || line.isEmpty())){
@@ -208,6 +198,7 @@ public class grpcClient
 }
 
 class WeatherExecutor extends Thread{
+	boolean receivedStopSignal = false;
 	boolean isStopped = false;
 	WeatherSubscriberGrpc.WeatherSubscriberStub stub;
 	Weather.WeatherSubscription params;
@@ -234,9 +225,7 @@ class WeatherExecutor extends Thread{
 			@Override
 			public void onNext(Weather.WeatherEvent event) {
 				System.out.println("Received weather event: " + event);
-
-				if (isStopped) {
-					System.out.println("Cancelling from client...");
+				if (receivedStopSignal) {
 					requestStream.cancel("Client no longer interested", null);
 				}
 			}
@@ -244,11 +233,11 @@ class WeatherExecutor extends Thread{
 			@Override
 			public void onError(Throwable t) {
 				Status status = Status.fromThrowable(t);
-				if(status.getCode() == Status.Code.CANCELLED){
-					System.out.println("Client was cancelled");
-				}
-				else{
-					System.err.println("Client got error: " + Status.fromThrowable(t));
+				if (status.getCode() == Status.Code.CANCELLED) {
+					System.out.println("Subscription cancelled");
+					isStopped = true;
+				} else {
+					System.err.println("Client got error: " + status);
 				}
 			}
 
@@ -259,10 +248,18 @@ class WeatherExecutor extends Thread{
 		};
 
 		stub.subscribe(params, responseObserver);
+		while(!isStopped){
+            try {
+                Thread.sleep(5);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
 	}
 }
 
 class FantasyExecutor extends Thread{
+	boolean receivedStopSignal = false;
 	boolean isStopped = false;
 	FantasySubscriberGrpc.FantasySubscriberStub stub;
 	Fantasy.FantasySubscription params;
@@ -297,8 +294,7 @@ class FantasyExecutor extends Thread{
 						System.out.println("Description: " + event.getDescription());
 						System.out.println();
 
-						if (isStopped) {
-							System.out.println("Cancelling from client...");
+						if (receivedStopSignal) {
 							requestStream.cancel("Client no longer interested", null);
 						}
 					}
@@ -306,11 +302,11 @@ class FantasyExecutor extends Thread{
 					@Override
 					public void onError(Throwable t) {
 						Status status = Status.fromThrowable(t);
-						if(status.getCode() == Status.Code.CANCELLED){
-							System.out.println("Client was cancelled");
-						}
-						else{
-							System.err.println("Client got error: " + Status.fromThrowable(t));
+						if (status.getCode() == Status.Code.CANCELLED) {
+							System.out.println("Subscription cancelled");
+							isStopped = true;
+						} else {
+							System.err.println("Client got error: " + status);
 						}
 					}
 
@@ -321,5 +317,12 @@ class FantasyExecutor extends Thread{
 				};
 
 		stub.subscribe(params, responseObserver);
+		while(!isStopped){
+			try {
+				Thread.sleep(5);
+			} catch (InterruptedException e) {
+				throw new RuntimeException(e);
+			}
+		}
 	}
 }

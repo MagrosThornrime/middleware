@@ -51,18 +51,12 @@ public class WeatherImpl : WeatherSubscriber.WeatherSubscriberBase
     public override async Task Subscribe(WeatherSubscription request, IServerStreamWriter<WeatherEvent> responseStream,
         ServerCallContext context)
     {
-        Console.WriteLine("Weather: A subscription started");
+        Console.WriteLine("Weather: a subscription started");
         WeatherEvent? lastEvent = null;
         try
         {
-            while (true)
+            while (!context.CancellationToken.IsCancellationRequested)
             {
-                if (context.CancellationToken.IsCancellationRequested)
-                {
-                    Console.WriteLine("Weather: a client cancelled");
-                    return;
-                }
-
                 WeatherEvent? toSend = null;
                 lock (_lock)
                 {
@@ -72,7 +66,6 @@ public class WeatherImpl : WeatherSubscriber.WeatherSubscriberBase
                         toSend = found;
                     }
                 }
-
                 if (toSend is not null && !toSend.Equals(lastEvent))
                 {
                     await responseStream.WriteAsync(toSend);
@@ -84,9 +77,13 @@ public class WeatherImpl : WeatherSubscriber.WeatherSubscriberBase
             }
 
         }
+        catch (OperationCanceledException)
+        {
+            Console.WriteLine("Weather: a client cancelled (token)");
+        }
         catch (RpcException ex) when (ex.StatusCode == StatusCode.Cancelled)
         {
-            Console.WriteLine("Weather: a client cancelled");
+            Console.WriteLine("Weather: a client cancelled (rpc)");
         }
         catch (RpcException ex) when (ex.StatusCode != StatusCode.Cancelled)
         {

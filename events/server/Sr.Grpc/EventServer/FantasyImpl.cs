@@ -111,18 +111,12 @@ public class FantasyImpl : FantasySubscriber.FantasySubscriberBase
     public override async Task Subscribe(FantasySubscription request, IServerStreamWriter<FantasyEvent> responseStream,
         ServerCallContext context)
     {
-        Console.WriteLine("Fantasy: A subscription started");
+        Console.WriteLine("Fantasy: a subscription started");
         try
         {
             var lastEvents = new List<FantasyEvent>();
-            while (true)
+            while (!context.CancellationToken.IsCancellationRequested)
             {               
-                if (context.CancellationToken.IsCancellationRequested)
-                {
-                    Console.WriteLine("Fantasy: a client cancelled");
-                    return;
-                }
-
                 var toSend = new List<FantasyEvent>();
                 lock (_lock)
                 {
@@ -143,9 +137,13 @@ public class FantasyImpl : FantasySubscriber.FantasySubscriberBase
             }
 
         }
+        catch (OperationCanceledException)
+        {
+            Console.WriteLine("Fantasy: a client cancelled (token)");
+        }
         catch (RpcException ex) when (ex.StatusCode == StatusCode.Cancelled)
         {
-            Console.WriteLine("Fantasy: a client cancelled");
+            Console.WriteLine("Fantasy: a client cancelled (rpc)");
         }
         catch (RpcException ex) when (ex.StatusCode != StatusCode.Cancelled)
         {
