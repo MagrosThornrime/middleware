@@ -36,18 +36,13 @@ import fantasy.FantasySubscriberGrpc;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.Status;
-import io.grpc.StatusRuntimeException;
 import io.grpc.stub.ClientCallStreamObserver;
 import io.grpc.stub.ClientResponseObserver;
-import io.grpc.stub.StreamObserver;
 
-import sr.grpc.gen.*;
 
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
@@ -95,7 +90,7 @@ public class grpcClient
 
 	private Fantasy.FantasySubscription _GetFantasyParams(String line) {
 		line = line.strip();
-		String[] parts = line.split(",");
+		String[] parts = line.split(";");
 		Fantasy.FantasySubscription.Builder builder = Fantasy.FantasySubscription.newBuilder()
 				.setEventType(Fantasy.FantasyEventType.valueOf(parts[1]))
 				.setLocation(parts[2])
@@ -110,7 +105,7 @@ public class grpcClient
 
 	private Weather.WeatherSubscription _GetWeatherParams(String line) {
 		line = line.strip();
-		String[] parts = line.split(",");
+		String[] parts = line.split(";");
 		Weather.WeatherSubscription.Builder builder = Weather.WeatherSubscription.newBuilder()
 				.setLocation(parts[1]);
 		return builder.build();
@@ -138,7 +133,7 @@ public class grpcClient
 
 	private Integer _GetKey(String line) {
 		line = line.strip();
-		String[] parts = line.split(",");
+		String[] parts = line.split(";");
 		return Integer.parseInt(parts[1]);
 	}
 
@@ -153,27 +148,27 @@ public class grpcClient
 				System.out.print("==> ");
 				System.out.flush();
 				line = in.readLine();
-				if(line.startsWith("/sub fantasy")){
+				if(line.startsWith("sub_fantasy")){
 					try{
 						var params = _GetFantasyParams(line);
 						var executor = _AddFantasyExecutor(params, _fantasySubscriberStub);
 						executor.start();
 					}
 					catch(ArrayIndexOutOfBoundsException e){
-						System.out.println("wrong num of parameters");
+						System.out.println("Wrong num of parameters");
 					}
 				}
-				else if(line.startsWith("/sub weather")){
+				else if(line.startsWith("sub_weather")){
 					try{
 						var params = _GetWeatherParams(line);
 						var executor = _AddWeatherExecutor(params, _weatherStub);
 						executor.start();
 					}
 					catch(ArrayIndexOutOfBoundsException e){
-						System.out.println("wrong num of parameters");
+						System.out.println("Wrong num of parameters");
 					}
 				}
-				else if(line.startsWith("/unsub fantasy")){
+				else if(line.startsWith("unsub_fantasy")){
 					var key = _GetKey(line);
 					if(_fantasyExecutors.containsKey(key)) {
 						var executor = _fantasyExecutors.get(key);
@@ -184,7 +179,7 @@ public class grpcClient
 						System.out.println("Unsub fantasy: " + key);
 					}
 				}
-				else if(line.startsWith("/unsub weather")){
+				else if(line.startsWith("unsub_weather")){
 					var key = _GetKey(line);
 					if(_weatherExecutors.containsKey(key)) {
 						var executor = _weatherExecutors.get(key);
@@ -195,11 +190,8 @@ public class grpcClient
 						System.out.println("Unsub fantasy: " + key);
 					}
 				}
-				else if(line.equals("x") || line.equals("")) {
-					continue;
-				}
-				else {
-					System.out.println("???");
+				else if(!(line.equals("x") || line.isEmpty())){
+					System.out.println("Wrong command");
 				}
 			}
 			catch (java.io.IOException ex) {
