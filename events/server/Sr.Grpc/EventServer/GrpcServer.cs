@@ -15,8 +15,8 @@ namespace server.Sr.Grpc.EventServer
         private Server _server = null!;
         private readonly ILogger<GrpcServer> _logger;
         
-        private FantasyImpl _fantasyImpl = new FantasyImpl();
-        private WeatherImpl _weatherImpl = new WeatherImpl();
+        private FantasyImpl _fantasyImpl = new ();
+        private WeatherImpl _weatherImpl = new ();
 
         private GrpcServer(ILogger<GrpcServer> logger)
         {
@@ -64,8 +64,7 @@ namespace server.Sr.Grpc.EventServer
             {
                 server._fantasyImpl.GenerateEvents();
                 server._weatherImpl.GenerateEvents();
-                await Task.Delay(4);
-                
+                await Task.Delay(TimeSpan.FromSeconds(4));
             }
         }
     }

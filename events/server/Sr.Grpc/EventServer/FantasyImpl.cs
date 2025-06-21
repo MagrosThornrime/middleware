@@ -133,7 +133,7 @@ public class FantasyImpl : FantasySubscriber.FantasySubscriberBase
                     await responseStream.WriteAsync(eventData);
                 }
 
-                await Task.Delay(TimeSpan.FromSeconds(5));
+                await Task.Delay(TimeSpan.FromSeconds(_generator.Next(1, 3)));
             }
 
         }

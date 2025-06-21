@@ -52,6 +52,7 @@ public class WeatherImpl : WeatherSubscriber.WeatherSubscriberBase
         ServerCallContext context)
     {
         Console.WriteLine("Weather: A subscription started");
+        WeatherEvent? lastEvent = null;
         try
         {
             while (true)
@@ -62,22 +63,23 @@ public class WeatherImpl : WeatherSubscriber.WeatherSubscriberBase
                     return;
                 }
 
-                var toSend = new List<WeatherEvent>();
+                WeatherEvent? toSend = null;
                 lock (_lock)
                 {
                     var found = _events.Find(weatherEvent => request.Location == weatherEvent.Location);
                     if (found is not null)
                     {
-                        toSend.Add(found);
+                        toSend = found;
                     }
                 }
 
-                foreach (var eventData in toSend)
+                if (toSend is not null && !toSend.Equals(lastEvent))
                 {
-                    await responseStream.WriteAsync(eventData);
+                    await responseStream.WriteAsync(toSend);
                 }
                 
-                await Task.Delay(TimeSpan.FromSeconds(5));
+                lastEvent = toSend;
+                await Task.Delay(TimeSpan.FromSeconds(_generator.Next(1, 3)));
 
             }
 
