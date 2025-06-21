@@ -20,40 +20,48 @@ public final class Fantasy {
   public enum FantasyEventType
       implements com.google.protobuf.ProtocolMessageEnum {
     /**
-     * <code>BATTLE = 0;</code>
+     * <code>UNKNOWN = 0;</code>
      */
-    BATTLE(0),
+    UNKNOWN(0),
     /**
-     * <code>DEBATES = 1;</code>
+     * <code>BATTLE = 1;</code>
      */
-    DEBATES(1),
+    BATTLE(1),
     /**
-     * <code>DUNGEON = 2;</code>
+     * <code>DEBATES = 2;</code>
      */
-    DUNGEON(2),
+    DEBATES(2),
     /**
-     * <code>FESTIVAL = 3;</code>
+     * <code>DUNGEON = 3;</code>
      */
-    FESTIVAL(3),
+    DUNGEON(3),
+    /**
+     * <code>FESTIVAL = 4;</code>
+     */
+    FESTIVAL(4),
     UNRECOGNIZED(-1),
     ;
 
     /**
-     * <code>BATTLE = 0;</code>
+     * <code>UNKNOWN = 0;</code>
      */
-    public static final int BATTLE_VALUE = 0;
+    public static final int UNKNOWN_VALUE = 0;
     /**
-     * <code>DEBATES = 1;</code>
+     * <code>BATTLE = 1;</code>
      */
-    public static final int DEBATES_VALUE = 1;
+    public static final int BATTLE_VALUE = 1;
     /**
-     * <code>DUNGEON = 2;</code>
+     * <code>DEBATES = 2;</code>
      */
-    public static final int DUNGEON_VALUE = 2;
+    public static final int DEBATES_VALUE = 2;
     /**
-     * <code>FESTIVAL = 3;</code>
+     * <code>DUNGEON = 3;</code>
      */
-    public static final int FESTIVAL_VALUE = 3;
+    public static final int DUNGEON_VALUE = 3;
+    /**
+     * <code>FESTIVAL = 4;</code>
+     */
+    public static final int FESTIVAL_VALUE = 4;
 
 
     public final int getNumber() {
@@ -80,10 +88,11 @@ public final class Fantasy {
      */
     public static FantasyEventType forNumber(int value) {
       switch (value) {
-        case 0: return BATTLE;
-        case 1: return DEBATES;
-        case 2: return DUNGEON;
-        case 3: return FESTIVAL;
+        case 0: return UNKNOWN;
+        case 1: return BATTLE;
+        case 2: return DEBATES;
+        case 3: return DUNGEON;
+        case 4: return FESTIVAL;
         default: return null;
       }
     }
@@ -156,48 +165,48 @@ public final class Fantasy {
     fantasy.Fantasy.FantasyEventType getEventType();
 
     /**
-     * <code>string location = 3;</code>
+     * <code>string location = 2;</code>
      * @return The location.
      */
     java.lang.String getLocation();
     /**
-     * <code>string location = 3;</code>
+     * <code>string location = 2;</code>
      * @return The bytes for location.
      */
     com.google.protobuf.ByteString
         getLocationBytes();
 
     /**
-     * <code>int32 minimumLevel = 4;</code>
+     * <code>int32 minimumLevel = 3;</code>
      * @return The minimumLevel.
      */
     int getMinimumLevel();
 
     /**
-     * <code>int32 maximumLevel = 5;</code>
+     * <code>int32 maximumLevel = 4;</code>
      * @return The maximumLevel.
      */
     int getMaximumLevel();
 
     /**
-     * <code>repeated string factions = 6;</code>
+     * <code>repeated string factions = 5;</code>
      * @return A list containing the factions.
      */
     java.util.List<java.lang.String>
         getFactionsList();
     /**
-     * <code>repeated string factions = 6;</code>
+     * <code>repeated string factions = 5;</code>
      * @return The count of factions.
      */
     int getFactionsCount();
     /**
-     * <code>repeated string factions = 6;</code>
+     * <code>repeated string factions = 5;</code>
      * @param index The index of the element to return.
      * @return The factions at the given index.
      */
     java.lang.String getFactions(int index);
     /**
-     * <code>repeated string factions = 6;</code>
+     * <code>repeated string factions = 5;</code>
      * @param index The index of the value to return.
      * @return The bytes of the factions at the given index.
      */
@@ -265,11 +274,11 @@ public final class Fantasy {
       return result == null ? fantasy.Fantasy.FantasyEventType.UNRECOGNIZED : result;
     }
 
-    public static final int LOCATION_FIELD_NUMBER = 3;
+    public static final int LOCATION_FIELD_NUMBER = 2;
     @SuppressWarnings("serial")
     private volatile java.lang.Object location_ = "";
     /**
-     * <code>string location = 3;</code>
+     * <code>string location = 2;</code>
      * @return The location.
      */
     @java.lang.Override
@@ -286,7 +295,7 @@ public final class Fantasy {
       }
     }
     /**
-     * <code>string location = 3;</code>
+     * <code>string location = 2;</code>
      * @return The bytes for location.
      */
     @java.lang.Override
@@ -304,10 +313,10 @@ public final class Fantasy {
       }
     }
 
-    public static final int MINIMUMLEVEL_FIELD_NUMBER = 4;
+    public static final int MINIMUMLEVEL_FIELD_NUMBER = 3;
     private int minimumLevel_ = 0;
     /**
-     * <code>int32 minimumLevel = 4;</code>
+     * <code>int32 minimumLevel = 3;</code>
      * @return The minimumLevel.
      */
     @java.lang.Override
@@ -315,10 +324,10 @@ public final class Fantasy {
       return minimumLevel_;
     }
 
-    public static final int MAXIMUMLEVEL_FIELD_NUMBER = 5;
+    public static final int MAXIMUMLEVEL_FIELD_NUMBER = 4;
     private int maximumLevel_ = 0;
     /**
-     * <code>int32 maximumLevel = 5;</code>
+     * <code>int32 maximumLevel = 4;</code>
      * @return The maximumLevel.
      */
     @java.lang.Override
@@ -326,11 +335,11 @@ public final class Fantasy {
       return maximumLevel_;
     }
 
-    public static final int FACTIONS_FIELD_NUMBER = 6;
+    public static final int FACTIONS_FIELD_NUMBER = 5;
     @SuppressWarnings("serial")
     private com.google.protobuf.LazyStringList factions_;
     /**
-     * <code>repeated string factions = 6;</code>
+     * <code>repeated string factions = 5;</code>
      * @return A list containing the factions.
      */
     public com.google.protobuf.ProtocolStringList
@@ -338,14 +347,14 @@ public final class Fantasy {
       return factions_;
     }
     /**
-     * <code>repeated string factions = 6;</code>
+     * <code>repeated string factions = 5;</code>
      * @return The count of factions.
      */
     public int getFactionsCount() {
       return factions_.size();
     }
     /**
-     * <code>repeated string factions = 6;</code>
+     * <code>repeated string factions = 5;</code>
      * @param index The index of the element to return.
      * @return The factions at the given index.
      */
@@ -353,7 +362,7 @@ public final class Fantasy {
       return factions_.get(index);
     }
     /**
-     * <code>repeated string factions = 6;</code>
+     * <code>repeated string factions = 5;</code>
      * @param index The index of the value to return.
      * @return The bytes of the factions at the given index.
      */
@@ -376,20 +385,20 @@ public final class Fantasy {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (eventType_ != fantasy.Fantasy.FantasyEventType.BATTLE.getNumber()) {
+      if (eventType_ != fantasy.Fantasy.FantasyEventType.UNKNOWN.getNumber()) {
         output.writeEnum(1, eventType_);
       }
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(location_)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, location_);
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, location_);
       }
       if (minimumLevel_ != 0) {
-        output.writeInt32(4, minimumLevel_);
+        output.writeInt32(3, minimumLevel_);
       }
       if (maximumLevel_ != 0) {
-        output.writeInt32(5, maximumLevel_);
+        output.writeInt32(4, maximumLevel_);
       }
       for (int i = 0; i < factions_.size(); i++) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 6, factions_.getRaw(i));
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 5, factions_.getRaw(i));
       }
       getUnknownFields().writeTo(output);
     }
@@ -400,20 +409,20 @@ public final class Fantasy {
       if (size != -1) return size;
 
       size = 0;
-      if (eventType_ != fantasy.Fantasy.FantasyEventType.BATTLE.getNumber()) {
+      if (eventType_ != fantasy.Fantasy.FantasyEventType.UNKNOWN.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(1, eventType_);
       }
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(location_)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, location_);
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, location_);
       }
       if (minimumLevel_ != 0) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(4, minimumLevel_);
+          .computeInt32Size(3, minimumLevel_);
       }
       if (maximumLevel_ != 0) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(5, maximumLevel_);
+          .computeInt32Size(4, maximumLevel_);
       }
       {
         int dataSize = 0;
@@ -760,27 +769,27 @@ public final class Fantasy {
                 bitField0_ |= 0x00000001;
                 break;
               } // case 8
-              case 26: {
+              case 18: {
                 location_ = input.readStringRequireUtf8();
                 bitField0_ |= 0x00000002;
                 break;
-              } // case 26
-              case 32: {
+              } // case 18
+              case 24: {
                 minimumLevel_ = input.readInt32();
                 bitField0_ |= 0x00000004;
                 break;
-              } // case 32
-              case 40: {
+              } // case 24
+              case 32: {
                 maximumLevel_ = input.readInt32();
                 bitField0_ |= 0x00000008;
                 break;
-              } // case 40
-              case 50: {
+              } // case 32
+              case 42: {
                 java.lang.String s = input.readStringRequireUtf8();
                 ensureFactionsIsMutable();
                 factions_.add(s);
                 break;
-              } // case 50
+              } // case 42
               default: {
                 if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                   done = true; // was an endgroup tag
@@ -853,7 +862,7 @@ public final class Fantasy {
 
       private java.lang.Object location_ = "";
       /**
-       * <code>string location = 3;</code>
+       * <code>string location = 2;</code>
        * @return The location.
        */
       public java.lang.String getLocation() {
@@ -869,7 +878,7 @@ public final class Fantasy {
         }
       }
       /**
-       * <code>string location = 3;</code>
+       * <code>string location = 2;</code>
        * @return The bytes for location.
        */
       public com.google.protobuf.ByteString
@@ -886,7 +895,7 @@ public final class Fantasy {
         }
       }
       /**
-       * <code>string location = 3;</code>
+       * <code>string location = 2;</code>
        * @param value The location to set.
        * @return This builder for chaining.
        */
@@ -899,7 +908,7 @@ public final class Fantasy {
         return this;
       }
       /**
-       * <code>string location = 3;</code>
+       * <code>string location = 2;</code>
        * @return This builder for chaining.
        */
       public Builder clearLocation() {
@@ -909,7 +918,7 @@ public final class Fantasy {
         return this;
       }
       /**
-       * <code>string location = 3;</code>
+       * <code>string location = 2;</code>
        * @param value The bytes for location to set.
        * @return This builder for chaining.
        */
@@ -925,7 +934,7 @@ public final class Fantasy {
 
       private int minimumLevel_ ;
       /**
-       * <code>int32 minimumLevel = 4;</code>
+       * <code>int32 minimumLevel = 3;</code>
        * @return The minimumLevel.
        */
       @java.lang.Override
@@ -933,7 +942,7 @@ public final class Fantasy {
         return minimumLevel_;
       }
       /**
-       * <code>int32 minimumLevel = 4;</code>
+       * <code>int32 minimumLevel = 3;</code>
        * @param value The minimumLevel to set.
        * @return This builder for chaining.
        */
@@ -945,7 +954,7 @@ public final class Fantasy {
         return this;
       }
       /**
-       * <code>int32 minimumLevel = 4;</code>
+       * <code>int32 minimumLevel = 3;</code>
        * @return This builder for chaining.
        */
       public Builder clearMinimumLevel() {
@@ -957,7 +966,7 @@ public final class Fantasy {
 
       private int maximumLevel_ ;
       /**
-       * <code>int32 maximumLevel = 5;</code>
+       * <code>int32 maximumLevel = 4;</code>
        * @return The maximumLevel.
        */
       @java.lang.Override
@@ -965,7 +974,7 @@ public final class Fantasy {
         return maximumLevel_;
       }
       /**
-       * <code>int32 maximumLevel = 5;</code>
+       * <code>int32 maximumLevel = 4;</code>
        * @param value The maximumLevel to set.
        * @return This builder for chaining.
        */
@@ -977,7 +986,7 @@ public final class Fantasy {
         return this;
       }
       /**
-       * <code>int32 maximumLevel = 5;</code>
+       * <code>int32 maximumLevel = 4;</code>
        * @return This builder for chaining.
        */
       public Builder clearMaximumLevel() {
@@ -995,7 +1004,7 @@ public final class Fantasy {
          }
       }
       /**
-       * <code>repeated string factions = 6;</code>
+       * <code>repeated string factions = 5;</code>
        * @return A list containing the factions.
        */
       public com.google.protobuf.ProtocolStringList
@@ -1003,14 +1012,14 @@ public final class Fantasy {
         return factions_.getUnmodifiableView();
       }
       /**
-       * <code>repeated string factions = 6;</code>
+       * <code>repeated string factions = 5;</code>
        * @return The count of factions.
        */
       public int getFactionsCount() {
         return factions_.size();
       }
       /**
-       * <code>repeated string factions = 6;</code>
+       * <code>repeated string factions = 5;</code>
        * @param index The index of the element to return.
        * @return The factions at the given index.
        */
@@ -1018,7 +1027,7 @@ public final class Fantasy {
         return factions_.get(index);
       }
       /**
-       * <code>repeated string factions = 6;</code>
+       * <code>repeated string factions = 5;</code>
        * @param index The index of the value to return.
        * @return The bytes of the factions at the given index.
        */
@@ -1027,7 +1036,7 @@ public final class Fantasy {
         return factions_.getByteString(index);
       }
       /**
-       * <code>repeated string factions = 6;</code>
+       * <code>repeated string factions = 5;</code>
        * @param index The index to set the value at.
        * @param value The factions to set.
        * @return This builder for chaining.
@@ -1041,7 +1050,7 @@ public final class Fantasy {
         return this;
       }
       /**
-       * <code>repeated string factions = 6;</code>
+       * <code>repeated string factions = 5;</code>
        * @param value The factions to add.
        * @return This builder for chaining.
        */
@@ -1054,7 +1063,7 @@ public final class Fantasy {
         return this;
       }
       /**
-       * <code>repeated string factions = 6;</code>
+       * <code>repeated string factions = 5;</code>
        * @param values The factions to add.
        * @return This builder for chaining.
        */
@@ -1067,7 +1076,7 @@ public final class Fantasy {
         return this;
       }
       /**
-       * <code>repeated string factions = 6;</code>
+       * <code>repeated string factions = 5;</code>
        * @return This builder for chaining.
        */
       public Builder clearFactions() {
@@ -1077,7 +1086,7 @@ public final class Fantasy {
         return this;
       }
       /**
-       * <code>repeated string factions = 6;</code>
+       * <code>repeated string factions = 5;</code>
        * @param value The bytes of the factions to add.
        * @return This builder for chaining.
        */
@@ -1926,15 +1935,16 @@ public final class Fantasy {
     java.lang.String[] descriptorData = {
       "\n\rfantasy.proto\022\007fantasy\"\223\001\n\023FantasySubs" +
       "cription\022,\n\teventType\030\001 \001(\0162\031.fantasy.Fa" +
-      "ntasyEventType\022\020\n\010location\030\003 \001(\t\022\024\n\014mini" +
-      "mumLevel\030\004 \001(\005\022\024\n\014maximumLevel\030\005 \001(\005\022\020\n\010" +
-      "factions\030\006 \003(\t\"O\n\014FantasyEvent\022*\n\004type\030\001" +
+      "ntasyEventType\022\020\n\010location\030\002 \001(\t\022\024\n\014mini" +
+      "mumLevel\030\003 \001(\005\022\024\n\014maximumLevel\030\004 \001(\005\022\020\n\010" +
+      "factions\030\005 \003(\t\"O\n\014FantasyEvent\022*\n\004type\030\001" +
       " \001(\0132\034.fantasy.FantasySubscription\022\023\n\013de" +
-      "scription\030\002 \001(\t*F\n\020FantasyEventType\022\n\n\006B" +
-      "ATTLE\020\000\022\013\n\007DEBATES\020\001\022\013\n\007DUNGEON\020\002\022\014\n\010FES" +
-      "TIVAL\020\0032W\n\021FantasySubscriber\022B\n\tSubscrib" +
-      "e\022\034.fantasy.FantasySubscription\032\025.fantas" +
-      "y.FantasyEvent0\001B\016\252\002\013Sr.Grpc.genb\006proto3"
+      "scription\030\002 \001(\t*S\n\020FantasyEventType\022\013\n\007U" +
+      "NKNOWN\020\000\022\n\n\006BATTLE\020\001\022\013\n\007DEBATES\020\002\022\013\n\007DUN" +
+      "GEON\020\003\022\014\n\010FESTIVAL\020\0042W\n\021FantasySubscribe" +
+      "r\022B\n\tSubscribe\022\034.fantasy.FantasySubscrip" +
+      "tion\032\025.fantasy.FantasyEvent0\001B\016\252\002\013Sr.Grp" +
+      "c.genb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

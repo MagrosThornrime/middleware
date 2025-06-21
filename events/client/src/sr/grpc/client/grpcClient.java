@@ -40,6 +40,8 @@ import io.grpc.stub.ClientCallStreamObserver;
 import io.grpc.stub.ClientResponseObserver;
 
 
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.Random;
@@ -48,6 +50,8 @@ import java.util.logging.Logger;
 
 import weather.Weather;
 import weather.WeatherSubscriberGrpc;
+
+import java.io.PrintStream;
 
 
 public class grpcClient 
@@ -138,8 +142,7 @@ public class grpcClient
 	}
 
 
-	public void test() throws InterruptedException
-	{
+	public void test() throws InterruptedException {
 		String line = null;
 		java.io.BufferedReader in = new java.io.BufferedReader(new java.io.InputStreamReader(System.in));
 
@@ -285,7 +288,14 @@ class FantasyExecutor extends Thread{
 
 					@Override
 					public void onNext(Fantasy.FantasyEvent event) {
-						System.out.println("Received fantasy event: " + event);
+						System.out.println("Received fantasy event:");
+						System.out.println("Event type: " + event.getType().getEventType());
+						System.out.println("Location: " + event.getType().getLocation());
+						System.out.println("Min level: " + event.getType().getMinimumLevel());
+						System.out.println("Max level: " + event.getType().getMaximumLevel());
+						System.out.println("Factions: " + event.getType().getFactionsList());
+						System.out.println("Description: " + event.getDescription());
+						System.out.println();
 
 						if (isStopped) {
 							System.out.println("Cancelling from client...");

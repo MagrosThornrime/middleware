@@ -3,11 +3,12 @@ syntax = "proto3";
 option csharp_namespace = "Sr.Grpc.gen";
 
 enum WeatherType{
-  RAIN = 0;
-  STORM = 1;
-  SUN = 2;
-  CLOUDS = 3;
-  FOG = 4;
+  UNKNOWN = 0;
+  RAIN = 1;
+  STORM = 2;
+  SUN = 3;
+  CLOUDS = 4;
+  FOG = 5;
 }
 
 package weather;

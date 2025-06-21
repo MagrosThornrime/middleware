@@ -77,7 +77,7 @@ public class FantasyImpl : FantasySubscriber.FantasySubscriberBase
             return false;
         }
 
-        if (clientSubscription.MinimumLevel < eventSubscription.MinimumLevel)
+        if (clientSubscription.MinimumLevel > eventSubscription.MinimumLevel)
         {
             return false;
         }
@@ -114,8 +114,9 @@ public class FantasyImpl : FantasySubscriber.FantasySubscriberBase
         Console.WriteLine("Fantasy: A subscription started");
         try
         {
+            var lastEvents = new List<FantasyEvent>();
             while (true)
-            {
+            {               
                 if (context.CancellationToken.IsCancellationRequested)
                 {
                     Console.WriteLine("Fantasy: a client cancelled");
@@ -127,12 +128,17 @@ public class FantasyImpl : FantasySubscriber.FantasySubscriberBase
                 {
                     toSend.AddRange(_events.Where(eventData => _EventTypeMatch(eventData.Type, request)));
                 }
-
-                foreach (var eventData in toSend)
+                
+                if (!toSend.SequenceEqual(lastEvents))
                 {
-                    await responseStream.WriteAsync(eventData);
+
+                    foreach (var eventData in toSend)
+                    {
+                        await responseStream.WriteAsync(eventData);
+                    }   
                 }
 
+                lastEvents = toSend.Select(e => e.Clone()).ToList();
                 await Task.Delay(TimeSpan.FromSeconds(_generator.Next(1, 3)));
             }
 
@@ -148,6 +154,5 @@ public class FantasyImpl : FantasySubscriber.FantasySubscriberBase
         
         Console.WriteLine("Fantasy: subscription end");
     }
-    
     
 }

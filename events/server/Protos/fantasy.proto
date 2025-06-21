@@ -5,10 +5,11 @@ option csharp_namespace = "Sr.Grpc.gen";
 package fantasy;
 
 enum FantasyEventType {
-  BATTLE = 0;
-  DEBATES = 1;
-  DUNGEON = 2;
-  FESTIVAL = 3;
+  UNKNOWN = 0;
+  BATTLE = 1;
+  DEBATES = 2;
+  DUNGEON = 3;
+  FESTIVAL = 4;
 }
 
 message FantasySubscription{

@@ -20,48 +20,56 @@ public final class Weather {
   public enum WeatherType
       implements com.google.protobuf.ProtocolMessageEnum {
     /**
-     * <code>RAIN = 0;</code>
+     * <code>UNKNOWN = 0;</code>
      */
-    RAIN(0),
+    UNKNOWN(0),
     /**
-     * <code>STORM = 1;</code>
+     * <code>RAIN = 1;</code>
      */
-    STORM(1),
+    RAIN(1),
     /**
-     * <code>SUN = 2;</code>
+     * <code>STORM = 2;</code>
      */
-    SUN(2),
+    STORM(2),
     /**
-     * <code>CLOUDS = 3;</code>
+     * <code>SUN = 3;</code>
      */
-    CLOUDS(3),
+    SUN(3),
     /**
-     * <code>FOG = 4;</code>
+     * <code>CLOUDS = 4;</code>
      */
-    FOG(4),
+    CLOUDS(4),
+    /**
+     * <code>FOG = 5;</code>
+     */
+    FOG(5),
     UNRECOGNIZED(-1),
     ;
 
     /**
-     * <code>RAIN = 0;</code>
+     * <code>UNKNOWN = 0;</code>
      */
-    public static final int RAIN_VALUE = 0;
+    public static final int UNKNOWN_VALUE = 0;
     /**
-     * <code>STORM = 1;</code>
+     * <code>RAIN = 1;</code>
      */
-    public static final int STORM_VALUE = 1;
+    public static final int RAIN_VALUE = 1;
     /**
-     * <code>SUN = 2;</code>
+     * <code>STORM = 2;</code>
      */
-    public static final int SUN_VALUE = 2;
+    public static final int STORM_VALUE = 2;
     /**
-     * <code>CLOUDS = 3;</code>
+     * <code>SUN = 3;</code>
      */
-    public static final int CLOUDS_VALUE = 3;
+    public static final int SUN_VALUE = 3;
     /**
-     * <code>FOG = 4;</code>
+     * <code>CLOUDS = 4;</code>
      */
-    public static final int FOG_VALUE = 4;
+    public static final int CLOUDS_VALUE = 4;
+    /**
+     * <code>FOG = 5;</code>
+     */
+    public static final int FOG_VALUE = 5;
 
 
     public final int getNumber() {
@@ -88,11 +96,12 @@ public final class Weather {
      */
     public static WeatherType forNumber(int value) {
       switch (value) {
-        case 0: return RAIN;
-        case 1: return STORM;
-        case 2: return SUN;
-        case 3: return CLOUDS;
-        case 4: return FOG;
+        case 0: return UNKNOWN;
+        case 1: return RAIN;
+        case 2: return STORM;
+        case 3: return SUN;
+        case 4: return CLOUDS;
+        case 5: return FOG;
         default: return null;
       }
     }
@@ -864,7 +873,7 @@ public final class Weather {
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(location_)) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 1, location_);
       }
-      if (type_ != weather.Weather.WeatherType.RAIN.getNumber()) {
+      if (type_ != weather.Weather.WeatherType.UNKNOWN.getNumber()) {
         output.writeEnum(2, type_);
       }
       if (java.lang.Float.floatToRawIntBits(temperature_) != 0) {
@@ -882,7 +891,7 @@ public final class Weather {
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(location_)) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, location_);
       }
-      if (type_ != weather.Weather.WeatherType.RAIN.getNumber()) {
+      if (type_ != weather.Weather.WeatherType.UNKNOWN.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(2, type_);
       }
@@ -1460,12 +1469,12 @@ public final class Weather {
       "\n\rweather.proto\022\007weather\"\'\n\023WeatherSubsc" +
       "ription\022\020\n\010location\030\001 \001(\t\"Y\n\014WeatherEven" +
       "t\022\020\n\010location\030\001 \001(\t\022\"\n\004type\030\002 \001(\0162\024.weat" +
-      "her.WeatherType\022\023\n\013temperature\030\003 \001(\002*@\n\013" +
-      "WeatherType\022\010\n\004RAIN\020\000\022\t\n\005STORM\020\001\022\007\n\003SUN\020" +
-      "\002\022\n\n\006CLOUDS\020\003\022\007\n\003FOG\020\0042W\n\021WeatherSubscri" +
-      "ber\022B\n\tSubscribe\022\034.weather.WeatherSubscr" +
-      "iption\032\025.weather.WeatherEvent0\001B\016\252\002\013Sr.G" +
-      "rpc.genb\006proto3"
+      "her.WeatherType\022\023\n\013temperature\030\003 \001(\002*M\n\013" +
+      "WeatherType\022\013\n\007UNKNOWN\020\000\022\010\n\004RAIN\020\001\022\t\n\005ST" +
+      "ORM\020\002\022\007\n\003SUN\020\003\022\n\n\006CLOUDS\020\004\022\007\n\003FOG\020\0052W\n\021W" +
+      "eatherSubscriber\022B\n\tSubscribe\022\034.weather." +
+      "WeatherSubscription\032\025.weather.WeatherEve" +
+      "nt0\001B\016\252\002\013Sr.Grpc.genb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
