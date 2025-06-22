@@ -38,7 +38,6 @@ class FantasyImpl(fantasy_grpc.FantasySubscriberServicer):
     def _generate_fantasy_event(self):
         event_types = [
             fantasy.FantasyEventType.BATTLE,
-            fantasy.FantasyEventType.DEBATES,
             fantasy.FantasyEventType.DUNGEON,
             fantasy.FantasyEventType.FESTIVAL
         ]
@@ -47,7 +46,7 @@ class FantasyImpl(fantasy_grpc.FantasySubscriberServicer):
         min_level = random.randint(18, 23)
         max_level = random.randint(30, 68)
         location = random.choice(self._locations)
-        interested_factions = random.randint(1, 2)
+        interested_factions = random.randint(1, 3)
         selected_factions = random.sample(self._factions, interested_factions)
 
         subscription = fantasy.FantasySubscription(
@@ -55,27 +54,26 @@ class FantasyImpl(fantasy_grpc.FantasySubscriberServicer):
             minimumLevel=min_level,
             maximumLevel=max_level,
             location=location,
-            factions=selected_factions
         )
-
 
         description = random.choice(self._descriptions)
 
         return fantasy.FantasyEvent(
             type=subscription,
-            description=description
+            description=description,
+            factions=selected_factions
         )
 
     async def _event_type_match(self, event_sub, client_sub):
         if client_sub.eventType != event_sub.eventType:
             return False
-        if client_sub.minimum_level > event_sub.minimum_level:
+        if client_sub.minimumLevel > event_sub.minimumLevel:
             return False
-        if client_sub.maximum_level < event_sub.maximum_level:
+        if client_sub.maximumLevel < event_sub.maximumLevel:
             return False
         if client_sub.location != event_sub.location:
             return False
-        return any(f in event_sub.factions for f in client_sub.factions)
+        return True
 
     def generate_events(self):
         async def _generate():

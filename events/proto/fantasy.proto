@@ -1,15 +1,12 @@
 syntax = "proto3";
 
-option csharp_namespace = "Sr.Grpc.gen";
-
 package fantasy;
 
 enum FantasyEventType {
     UNKNOWN = 0;
     BATTLE = 1;
-    DEBATES = 2;
-    DUNGEON = 3;
-    FESTIVAL = 4;
+    DUNGEON = 2;
+    FESTIVAL = 3;
 }
 
 message FantasySubscription{
@@ -17,12 +14,13 @@ message FantasySubscription{
   string location = 2;
   int32 minimumLevel = 3;
   int32 maximumLevel = 4;
-  repeated string factions = 5;
 }
 
 message FantasyEvent{
   FantasySubscription type = 1;
   string description = 2;
+  repeated string factions = 3;
+ 
 }
 
 service FantasySubscriber {

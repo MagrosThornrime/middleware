@@ -1,4 +1,5 @@
 events/server/venv
 events/server/__pycache__
+events/server/generated/__pycache__
 events/client/.idea/
 events/client/out/

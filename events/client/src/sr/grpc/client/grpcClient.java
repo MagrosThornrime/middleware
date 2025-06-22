@@ -52,16 +52,12 @@ import weather.WeatherSubscriberGrpc;
 
 public class grpcClient 
 {
-	private static final Logger logger = Logger.getLogger(grpcClient.class.getName());
-
 	private final Random _generator = new Random();
 
 	private final ManagedChannel channel;
 
-	private final WeatherSubscriberGrpc.WeatherSubscriberStub _weatherStub;
 	private final FantasySubscriberGrpc.FantasySubscriberStub _fantasySubscriberStub;
 
-	private final HashMap<Integer, WeatherExecutor> _weatherExecutors = new HashMap<>();
 	private final HashMap<Integer, FantasyExecutor> _fantasyExecutors = new HashMap<>();
 
 
@@ -72,7 +68,6 @@ public class grpcClient
 				.usePlaintext() // Channels are secure by default (via SSL/TLS). For the example we disable TLS to avoid needing certificates.
 				.build();
 
-		_weatherStub = WeatherSubscriberGrpc.newStub(channel);
 		_fantasySubscriberStub = FantasySubscriberGrpc.newStub(channel);
 	}
 	
@@ -97,29 +92,9 @@ public class grpcClient
 				.setMinimumLevel(Integer.parseInt(parts[3]))
 				.setMaximumLevel(Integer.parseInt(parts[4]));
 
-		for(int i = 5; i < parts.length; i++) {
-			builder.addFactions(parts[i]);
-		}
 		return builder.build();
 	}
 
-	private Weather.WeatherSubscription _GetWeatherParams(String line) {
-		line = line.strip();
-		String[] parts = line.split(";");
-		Weather.WeatherSubscription.Builder builder = Weather.WeatherSubscription.newBuilder()
-				.setLocation(parts[1]);
-		return builder.build();
-	}
-
-	private WeatherExecutor _AddWeatherExecutor(Weather.WeatherSubscription params, WeatherSubscriberGrpc.WeatherSubscriberStub stub) {
-		Integer id;
-		do {
-			id = _generator.nextInt();
-		}while(_weatherExecutors.containsKey(id));
-		_weatherExecutors.put(id, new WeatherExecutor(params, stub));
-		System.out.println("Added weather executor: " + id);
-		return _weatherExecutors.get(id);
-	}
 
 	private FantasyExecutor _AddFantasyExecutor(Fantasy.FantasySubscription params, FantasySubscriberGrpc.FantasySubscriberStub stub) {
 		Integer id;
@@ -147,7 +122,7 @@ public class grpcClient
 				System.out.print("==> ");
 				System.out.flush();
 				line = in.readLine();
-				if(line.startsWith("sub_fantasy")){
+				if(line.startsWith("sub")){
 					try{
 						var params = _GetFantasyParams(line);
 						var executor = _AddFantasyExecutor(params, _fantasySubscriberStub);
@@ -157,32 +132,13 @@ public class grpcClient
 						System.out.println("Wrong num of parameters");
 					}
 				}
-				else if(line.startsWith("sub_weather")){
-					try{
-						var params = _GetWeatherParams(line);
-						var executor = _AddWeatherExecutor(params, _weatherStub);
-						executor.start();
-					}
-					catch(ArrayIndexOutOfBoundsException e){
-						System.out.println("Wrong num of parameters");
-					}
-				}
-				else if(line.startsWith("unsub_fantasy")){
+				else if(line.startsWith("unsub")){
 					var key = _GetKey(line);
 					if(_fantasyExecutors.containsKey(key)) {
 						var executor = _fantasyExecutors.get(key);
 						executor.cancelStream();
 						Thread.sleep(10);
 						_fantasyExecutors.remove(key);
-					}
-				}
-				else if(line.startsWith("unsub_weather")){
-					var key = _GetKey(line);
-					if(_weatherExecutors.containsKey(key)) {
-						var executor = _weatherExecutors.get(key);
-						executor.cancelStream();
-						Thread.sleep(10);
-						_weatherExecutors.remove(key);
 					}
 				}
 				else if(!(line.equals("x") || line.isEmpty())){
@@ -197,62 +153,6 @@ public class grpcClient
 		
 		shutdown();
 	}
-}
-
-class WeatherExecutor extends Thread{
-	WeatherSubscriberGrpc.WeatherSubscriberStub stub;
-	Weather.WeatherSubscription params;
-	volatile ClientCallStreamObserver<Weather.WeatherSubscription> requestStream;
-
-	WeatherExecutor(Weather.WeatherSubscription params, WeatherSubscriberGrpc.WeatherSubscriberStub stub)
-	{
-		this.params = params;
-		this.stub = stub;
-	}
-
-	public void run()
-	{
-		System.out.println("Sending subscription request...");
-
-		ClientResponseObserver<Weather.WeatherSubscription, Weather.WeatherEvent> responseObserver =
-				new ClientResponseObserver<>() {
-
-			@Override
-			public void beforeStart(ClientCallStreamObserver<Weather.WeatherSubscription> requestStream) {
-				WeatherExecutor.this.requestStream = requestStream;
-			}
-
-			@Override
-			public void onNext(Weather.WeatherEvent event) {
-				System.out.println("Received weather event: " + event);
-			}
-
-			@Override
-			public void onError(Throwable t) {
-				Status status = Status.fromThrowable(t);
-				if (status.getCode() == Status.Code.CANCELLED) {
-					System.out.println("Subscription cancelled");
-				} else {
-					System.err.println("Client got error: " + status);
-				}
-			}
-
-			@Override
-			public void onCompleted() {
-				System.out.println("Server finished sending primes.");
-			}
-		};
-
-		stub.subscribe(params, responseObserver);
-
-	}
-
-	public void cancelStream() {
-		if (requestStream != null) {
-			requestStream.cancel("Manual cancel", null);
-		}
-	}
-
 }
 
 class FantasyExecutor extends Thread{
@@ -285,7 +185,7 @@ class FantasyExecutor extends Thread{
 						System.out.println("Location: " + event.getType().getLocation());
 						System.out.println("Min level: " + event.getType().getMinimumLevel());
 						System.out.println("Max level: " + event.getType().getMaximumLevel());
-						System.out.println("Factions: " + event.getType().getFactionsList());
+						System.out.println("Factions: " + event.getFactionsList());
 						System.out.println("Description: " + event.getDescription());
 						System.out.println();
 
@@ -303,7 +203,7 @@ class FantasyExecutor extends Thread{
 
 					@Override
 					public void onCompleted() {
-						System.out.println("Server finished sending primes.");
+						System.out.println("Server finished.");
 					}
 				};
 

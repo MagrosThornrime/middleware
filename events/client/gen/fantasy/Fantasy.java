@@ -28,17 +28,13 @@ public final class Fantasy {
      */
     BATTLE(1),
     /**
-     * <code>DEBATES = 2;</code>
+     * <code>DUNGEON = 2;</code>
      */
-    DEBATES(2),
+    DUNGEON(2),
     /**
-     * <code>DUNGEON = 3;</code>
+     * <code>FESTIVAL = 3;</code>
      */
-    DUNGEON(3),
-    /**
-     * <code>FESTIVAL = 4;</code>
-     */
-    FESTIVAL(4),
+    FESTIVAL(3),
     UNRECOGNIZED(-1),
     ;
 
@@ -51,17 +47,13 @@ public final class Fantasy {
      */
     public static final int BATTLE_VALUE = 1;
     /**
-     * <code>DEBATES = 2;</code>
+     * <code>DUNGEON = 2;</code>
      */
-    public static final int DEBATES_VALUE = 2;
+    public static final int DUNGEON_VALUE = 2;
     /**
-     * <code>DUNGEON = 3;</code>
+     * <code>FESTIVAL = 3;</code>
      */
-    public static final int DUNGEON_VALUE = 3;
-    /**
-     * <code>FESTIVAL = 4;</code>
-     */
-    public static final int FESTIVAL_VALUE = 4;
+    public static final int FESTIVAL_VALUE = 3;
 
 
     public final int getNumber() {
@@ -90,9 +82,8 @@ public final class Fantasy {
       switch (value) {
         case 0: return UNKNOWN;
         case 1: return BATTLE;
-        case 2: return DEBATES;
-        case 3: return DUNGEON;
-        case 4: return FESTIVAL;
+        case 2: return DUNGEON;
+        case 3: return FESTIVAL;
         default: return null;
       }
     }
@@ -187,31 +178,6 @@ public final class Fantasy {
      * @return The maximumLevel.
      */
     int getMaximumLevel();
-
-    /**
-     * <code>repeated string factions = 5;</code>
-     * @return A list containing the factions.
-     */
-    java.util.List<java.lang.String>
-        getFactionsList();
-    /**
-     * <code>repeated string factions = 5;</code>
-     * @return The count of factions.
-     */
-    int getFactionsCount();
-    /**
-     * <code>repeated string factions = 5;</code>
-     * @param index The index of the element to return.
-     * @return The factions at the given index.
-     */
-    java.lang.String getFactions(int index);
-    /**
-     * <code>repeated string factions = 5;</code>
-     * @param index The index of the value to return.
-     * @return The bytes of the factions at the given index.
-     */
-    com.google.protobuf.ByteString
-        getFactionsBytes(int index);
   }
   /**
    * Protobuf type {@code fantasy.FantasySubscription}
@@ -228,7 +194,6 @@ public final class Fantasy {
     private FantasySubscription() {
       eventType_ = 0;
       location_ = "";
-      factions_ = com.google.protobuf.LazyStringArrayList.EMPTY;
     }
 
     @java.lang.Override
@@ -335,42 +300,6 @@ public final class Fantasy {
       return maximumLevel_;
     }
 
-    public static final int FACTIONS_FIELD_NUMBER = 5;
-    @SuppressWarnings("serial")
-    private com.google.protobuf.LazyStringList factions_;
-    /**
-     * <code>repeated string factions = 5;</code>
-     * @return A list containing the factions.
-     */
-    public com.google.protobuf.ProtocolStringList
-        getFactionsList() {
-      return factions_;
-    }
-    /**
-     * <code>repeated string factions = 5;</code>
-     * @return The count of factions.
-     */
-    public int getFactionsCount() {
-      return factions_.size();
-    }
-    /**
-     * <code>repeated string factions = 5;</code>
-     * @param index The index of the element to return.
-     * @return The factions at the given index.
-     */
-    public java.lang.String getFactions(int index) {
-      return factions_.get(index);
-    }
-    /**
-     * <code>repeated string factions = 5;</code>
-     * @param index The index of the value to return.
-     * @return The bytes of the factions at the given index.
-     */
-    public com.google.protobuf.ByteString
-        getFactionsBytes(int index) {
-      return factions_.getByteString(index);
-    }
-
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -397,9 +326,6 @@ public final class Fantasy {
       if (maximumLevel_ != 0) {
         output.writeInt32(4, maximumLevel_);
       }
-      for (int i = 0; i < factions_.size(); i++) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 5, factions_.getRaw(i));
-      }
       getUnknownFields().writeTo(output);
     }
 
@@ -424,14 +350,6 @@ public final class Fantasy {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(4, maximumLevel_);
       }
-      {
-        int dataSize = 0;
-        for (int i = 0; i < factions_.size(); i++) {
-          dataSize += computeStringSizeNoTag(factions_.getRaw(i));
-        }
-        size += dataSize;
-        size += 1 * getFactionsList().size();
-      }
       size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
       return size;
@@ -454,8 +372,6 @@ public final class Fantasy {
           != other.getMinimumLevel()) return false;
       if (getMaximumLevel()
           != other.getMaximumLevel()) return false;
-      if (!getFactionsList()
-          .equals(other.getFactionsList())) return false;
       if (!getUnknownFields().equals(other.getUnknownFields())) return false;
       return true;
     }
@@ -475,10 +391,6 @@ public final class Fantasy {
       hash = (53 * hash) + getMinimumLevel();
       hash = (37 * hash) + MAXIMUMLEVEL_FIELD_NUMBER;
       hash = (53 * hash) + getMaximumLevel();
-      if (getFactionsCount() > 0) {
-        hash = (37 * hash) + FACTIONS_FIELD_NUMBER;
-        hash = (53 * hash) + getFactionsList().hashCode();
-      }
       hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -612,8 +524,6 @@ public final class Fantasy {
         location_ = "";
         minimumLevel_ = 0;
         maximumLevel_ = 0;
-        factions_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000010);
         return this;
       }
 
@@ -640,18 +550,9 @@ public final class Fantasy {
       @java.lang.Override
       public fantasy.Fantasy.FantasySubscription buildPartial() {
         fantasy.Fantasy.FantasySubscription result = new fantasy.Fantasy.FantasySubscription(this);
-        buildPartialRepeatedFields(result);
         if (bitField0_ != 0) { buildPartial0(result); }
         onBuilt();
         return result;
-      }
-
-      private void buildPartialRepeatedFields(fantasy.Fantasy.FantasySubscription result) {
-        if (((bitField0_ & 0x00000010) != 0)) {
-          factions_ = factions_.getUnmodifiableView();
-          bitField0_ = (bitField0_ & ~0x00000010);
-        }
-        result.factions_ = factions_;
       }
 
       private void buildPartial0(fantasy.Fantasy.FantasySubscription result) {
@@ -728,16 +629,6 @@ public final class Fantasy {
         if (other.getMaximumLevel() != 0) {
           setMaximumLevel(other.getMaximumLevel());
         }
-        if (!other.factions_.isEmpty()) {
-          if (factions_.isEmpty()) {
-            factions_ = other.factions_;
-            bitField0_ = (bitField0_ & ~0x00000010);
-          } else {
-            ensureFactionsIsMutable();
-            factions_.addAll(other.factions_);
-          }
-          onChanged();
-        }
         this.mergeUnknownFields(other.getUnknownFields());
         onChanged();
         return this;
@@ -784,12 +675,6 @@ public final class Fantasy {
                 bitField0_ |= 0x00000008;
                 break;
               } // case 32
-              case 42: {
-                java.lang.String s = input.readStringRequireUtf8();
-                ensureFactionsIsMutable();
-                factions_.add(s);
-                break;
-              } // case 42
               default: {
                 if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                   done = true; // was an endgroup tag
@@ -995,110 +880,6 @@ public final class Fantasy {
         onChanged();
         return this;
       }
-
-      private com.google.protobuf.LazyStringList factions_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-      private void ensureFactionsIsMutable() {
-        if (!((bitField0_ & 0x00000010) != 0)) {
-          factions_ = new com.google.protobuf.LazyStringArrayList(factions_);
-          bitField0_ |= 0x00000010;
-         }
-      }
-      /**
-       * <code>repeated string factions = 5;</code>
-       * @return A list containing the factions.
-       */
-      public com.google.protobuf.ProtocolStringList
-          getFactionsList() {
-        return factions_.getUnmodifiableView();
-      }
-      /**
-       * <code>repeated string factions = 5;</code>
-       * @return The count of factions.
-       */
-      public int getFactionsCount() {
-        return factions_.size();
-      }
-      /**
-       * <code>repeated string factions = 5;</code>
-       * @param index The index of the element to return.
-       * @return The factions at the given index.
-       */
-      public java.lang.String getFactions(int index) {
-        return factions_.get(index);
-      }
-      /**
-       * <code>repeated string factions = 5;</code>
-       * @param index The index of the value to return.
-       * @return The bytes of the factions at the given index.
-       */
-      public com.google.protobuf.ByteString
-          getFactionsBytes(int index) {
-        return factions_.getByteString(index);
-      }
-      /**
-       * <code>repeated string factions = 5;</code>
-       * @param index The index to set the value at.
-       * @param value The factions to set.
-       * @return This builder for chaining.
-       */
-      public Builder setFactions(
-          int index, java.lang.String value) {
-        if (value == null) { throw new NullPointerException(); }
-        ensureFactionsIsMutable();
-        factions_.set(index, value);
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>repeated string factions = 5;</code>
-       * @param value The factions to add.
-       * @return This builder for chaining.
-       */
-      public Builder addFactions(
-          java.lang.String value) {
-        if (value == null) { throw new NullPointerException(); }
-        ensureFactionsIsMutable();
-        factions_.add(value);
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>repeated string factions = 5;</code>
-       * @param values The factions to add.
-       * @return This builder for chaining.
-       */
-      public Builder addAllFactions(
-          java.lang.Iterable<java.lang.String> values) {
-        ensureFactionsIsMutable();
-        com.google.protobuf.AbstractMessageLite.Builder.addAll(
-            values, factions_);
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>repeated string factions = 5;</code>
-       * @return This builder for chaining.
-       */
-      public Builder clearFactions() {
-        factions_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000010);
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>repeated string factions = 5;</code>
-       * @param value The bytes of the factions to add.
-       * @return This builder for chaining.
-       */
-      public Builder addFactionsBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) { throw new NullPointerException(); }
-        checkByteStringIsUtf8(value);
-        ensureFactionsIsMutable();
-        factions_.add(value);
-        onChanged();
-        return this;
-      }
       @java.lang.Override
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -1193,6 +974,31 @@ public final class Fantasy {
      */
     com.google.protobuf.ByteString
         getDescriptionBytes();
+
+    /**
+     * <code>repeated string factions = 3;</code>
+     * @return A list containing the factions.
+     */
+    java.util.List<java.lang.String>
+        getFactionsList();
+    /**
+     * <code>repeated string factions = 3;</code>
+     * @return The count of factions.
+     */
+    int getFactionsCount();
+    /**
+     * <code>repeated string factions = 3;</code>
+     * @param index The index of the element to return.
+     * @return The factions at the given index.
+     */
+    java.lang.String getFactions(int index);
+    /**
+     * <code>repeated string factions = 3;</code>
+     * @param index The index of the value to return.
+     * @return The bytes of the factions at the given index.
+     */
+    com.google.protobuf.ByteString
+        getFactionsBytes(int index);
   }
   /**
    * Protobuf type {@code fantasy.FantasyEvent}
@@ -1208,6 +1014,7 @@ public final class Fantasy {
     }
     private FantasyEvent() {
       description_ = "";
+      factions_ = com.google.protobuf.LazyStringArrayList.EMPTY;
     }
 
     @java.lang.Override
@@ -1300,6 +1107,42 @@ public final class Fantasy {
       }
     }
 
+    public static final int FACTIONS_FIELD_NUMBER = 3;
+    @SuppressWarnings("serial")
+    private com.google.protobuf.LazyStringList factions_;
+    /**
+     * <code>repeated string factions = 3;</code>
+     * @return A list containing the factions.
+     */
+    public com.google.protobuf.ProtocolStringList
+        getFactionsList() {
+      return factions_;
+    }
+    /**
+     * <code>repeated string factions = 3;</code>
+     * @return The count of factions.
+     */
+    public int getFactionsCount() {
+      return factions_.size();
+    }
+    /**
+     * <code>repeated string factions = 3;</code>
+     * @param index The index of the element to return.
+     * @return The factions at the given index.
+     */
+    public java.lang.String getFactions(int index) {
+      return factions_.get(index);
+    }
+    /**
+     * <code>repeated string factions = 3;</code>
+     * @param index The index of the value to return.
+     * @return The bytes of the factions at the given index.
+     */
+    public com.google.protobuf.ByteString
+        getFactionsBytes(int index) {
+      return factions_.getByteString(index);
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -1320,6 +1163,9 @@ public final class Fantasy {
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(description_)) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 2, description_);
       }
+      for (int i = 0; i < factions_.size(); i++) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, factions_.getRaw(i));
+      }
       getUnknownFields().writeTo(output);
     }
 
@@ -1335,6 +1181,14 @@ public final class Fantasy {
       }
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(description_)) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, description_);
+      }
+      {
+        int dataSize = 0;
+        for (int i = 0; i < factions_.size(); i++) {
+          dataSize += computeStringSizeNoTag(factions_.getRaw(i));
+        }
+        size += dataSize;
+        size += 1 * getFactionsList().size();
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
@@ -1358,6 +1212,8 @@ public final class Fantasy {
       }
       if (!getDescription()
           .equals(other.getDescription())) return false;
+      if (!getFactionsList()
+          .equals(other.getFactionsList())) return false;
       if (!getUnknownFields().equals(other.getUnknownFields())) return false;
       return true;
     }
@@ -1375,6 +1231,10 @@ public final class Fantasy {
       }
       hash = (37 * hash) + DESCRIPTION_FIELD_NUMBER;
       hash = (53 * hash) + getDescription().hashCode();
+      if (getFactionsCount() > 0) {
+        hash = (37 * hash) + FACTIONS_FIELD_NUMBER;
+        hash = (53 * hash) + getFactionsList().hashCode();
+      }
       hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -1510,6 +1370,8 @@ public final class Fantasy {
           typeBuilder_ = null;
         }
         description_ = "";
+        factions_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000004);
         return this;
       }
 
@@ -1536,9 +1398,18 @@ public final class Fantasy {
       @java.lang.Override
       public fantasy.Fantasy.FantasyEvent buildPartial() {
         fantasy.Fantasy.FantasyEvent result = new fantasy.Fantasy.FantasyEvent(this);
+        buildPartialRepeatedFields(result);
         if (bitField0_ != 0) { buildPartial0(result); }
         onBuilt();
         return result;
+      }
+
+      private void buildPartialRepeatedFields(fantasy.Fantasy.FantasyEvent result) {
+        if (((bitField0_ & 0x00000004) != 0)) {
+          factions_ = factions_.getUnmodifiableView();
+          bitField0_ = (bitField0_ & ~0x00000004);
+        }
+        result.factions_ = factions_;
       }
 
       private void buildPartial0(fantasy.Fantasy.FantasyEvent result) {
@@ -1605,6 +1476,16 @@ public final class Fantasy {
           bitField0_ |= 0x00000002;
           onChanged();
         }
+        if (!other.factions_.isEmpty()) {
+          if (factions_.isEmpty()) {
+            factions_ = other.factions_;
+            bitField0_ = (bitField0_ & ~0x00000004);
+          } else {
+            ensureFactionsIsMutable();
+            factions_.addAll(other.factions_);
+          }
+          onChanged();
+        }
         this.mergeUnknownFields(other.getUnknownFields());
         onChanged();
         return this;
@@ -1643,6 +1524,12 @@ public final class Fantasy {
                 bitField0_ |= 0x00000002;
                 break;
               } // case 18
+              case 26: {
+                java.lang.String s = input.readStringRequireUtf8();
+                ensureFactionsIsMutable();
+                factions_.add(s);
+                break;
+              } // case 26
               default: {
                 if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                   done = true; // was an endgroup tag
@@ -1850,6 +1737,110 @@ public final class Fantasy {
         onChanged();
         return this;
       }
+
+      private com.google.protobuf.LazyStringList factions_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      private void ensureFactionsIsMutable() {
+        if (!((bitField0_ & 0x00000004) != 0)) {
+          factions_ = new com.google.protobuf.LazyStringArrayList(factions_);
+          bitField0_ |= 0x00000004;
+         }
+      }
+      /**
+       * <code>repeated string factions = 3;</code>
+       * @return A list containing the factions.
+       */
+      public com.google.protobuf.ProtocolStringList
+          getFactionsList() {
+        return factions_.getUnmodifiableView();
+      }
+      /**
+       * <code>repeated string factions = 3;</code>
+       * @return The count of factions.
+       */
+      public int getFactionsCount() {
+        return factions_.size();
+      }
+      /**
+       * <code>repeated string factions = 3;</code>
+       * @param index The index of the element to return.
+       * @return The factions at the given index.
+       */
+      public java.lang.String getFactions(int index) {
+        return factions_.get(index);
+      }
+      /**
+       * <code>repeated string factions = 3;</code>
+       * @param index The index of the value to return.
+       * @return The bytes of the factions at the given index.
+       */
+      public com.google.protobuf.ByteString
+          getFactionsBytes(int index) {
+        return factions_.getByteString(index);
+      }
+      /**
+       * <code>repeated string factions = 3;</code>
+       * @param index The index to set the value at.
+       * @param value The factions to set.
+       * @return This builder for chaining.
+       */
+      public Builder setFactions(
+          int index, java.lang.String value) {
+        if (value == null) { throw new NullPointerException(); }
+        ensureFactionsIsMutable();
+        factions_.set(index, value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string factions = 3;</code>
+       * @param value The factions to add.
+       * @return This builder for chaining.
+       */
+      public Builder addFactions(
+          java.lang.String value) {
+        if (value == null) { throw new NullPointerException(); }
+        ensureFactionsIsMutable();
+        factions_.add(value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string factions = 3;</code>
+       * @param values The factions to add.
+       * @return This builder for chaining.
+       */
+      public Builder addAllFactions(
+          java.lang.Iterable<java.lang.String> values) {
+        ensureFactionsIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, factions_);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string factions = 3;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearFactions() {
+        factions_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000004);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string factions = 3;</code>
+       * @param value The bytes of the factions to add.
+       * @return This builder for chaining.
+       */
+      public Builder addFactionsBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) { throw new NullPointerException(); }
+        checkByteStringIsUtf8(value);
+        ensureFactionsIsMutable();
+        factions_.add(value);
+        onChanged();
+        return this;
+      }
       @java.lang.Override
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -1933,18 +1924,17 @@ public final class Fantasy {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\rfantasy.proto\022\007fantasy\"\223\001\n\023FantasySubs" +
+      "\n\rfantasy.proto\022\007fantasy\"\201\001\n\023FantasySubs" +
       "cription\022,\n\teventType\030\001 \001(\0162\031.fantasy.Fa" +
       "ntasyEventType\022\020\n\010location\030\002 \001(\t\022\024\n\014mini" +
-      "mumLevel\030\003 \001(\005\022\024\n\014maximumLevel\030\004 \001(\005\022\020\n\010" +
-      "factions\030\005 \003(\t\"O\n\014FantasyEvent\022*\n\004type\030\001" +
-      " \001(\0132\034.fantasy.FantasySubscription\022\023\n\013de" +
-      "scription\030\002 \001(\t*S\n\020FantasyEventType\022\013\n\007U" +
-      "NKNOWN\020\000\022\n\n\006BATTLE\020\001\022\013\n\007DEBATES\020\002\022\013\n\007DUN" +
-      "GEON\020\003\022\014\n\010FESTIVAL\020\0042W\n\021FantasySubscribe" +
-      "r\022B\n\tSubscribe\022\034.fantasy.FantasySubscrip" +
-      "tion\032\025.fantasy.FantasyEvent0\001B\016\252\002\013Sr.Grp" +
-      "c.genb\006proto3"
+      "mumLevel\030\003 \001(\005\022\024\n\014maximumLevel\030\004 \001(\005\"a\n\014" +
+      "FantasyEvent\022*\n\004type\030\001 \001(\0132\034.fantasy.Fan" +
+      "tasySubscription\022\023\n\013description\030\002 \001(\t\022\020\n" +
+      "\010factions\030\003 \003(\t*F\n\020FantasyEventType\022\013\n\007U" +
+      "NKNOWN\020\000\022\n\n\006BATTLE\020\001\022\013\n\007DUNGEON\020\002\022\014\n\010FES" +
+      "TIVAL\020\0032W\n\021FantasySubscriber\022B\n\tSubscrib" +
+      "e\022\034.fantasy.FantasySubscription\032\025.fantas" +
+      "y.FantasyEvent0\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -1955,13 +1945,13 @@ public final class Fantasy {
     internal_static_fantasy_FantasySubscription_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_fantasy_FantasySubscription_descriptor,
-        new java.lang.String[] { "EventType", "Location", "MinimumLevel", "MaximumLevel", "Factions", });
+        new java.lang.String[] { "EventType", "Location", "MinimumLevel", "MaximumLevel", });
     internal_static_fantasy_FantasyEvent_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_fantasy_FantasyEvent_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_fantasy_FantasyEvent_descriptor,
-        new java.lang.String[] { "Type", "Description", });
+        new java.lang.String[] { "Type", "Description", "Factions", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)
