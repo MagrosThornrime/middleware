@@ -2,8 +2,8 @@ import asyncio
 import random
 from typing import List
 
-import generated.fantasy_pb2_grpc as fantasy_grpc
-import generated.fantasy_pb2 as fantasy
+import fantasy_pb2_grpc as fantasy_grpc
+import fantasy_pb2 as fantasy
 
 
 class FantasyImpl(fantasy_grpc.FantasySubscriberServicer):
@@ -48,32 +48,19 @@ class FantasyImpl(fantasy_grpc.FantasySubscriberServicer):
         location = random.choice(self._locations)
         interested_factions = random.randint(1, 3)
         selected_factions = random.sample(self._factions, interested_factions)
+        description = random.choice(self._descriptions)
 
-        subscription = fantasy.FantasySubscription(
+        return fantasy.FantasyEvent(
             eventType=event_type,
             minimumLevel=min_level,
             maximumLevel=max_level,
             location=location,
-        )
-
-        description = random.choice(self._descriptions)
-
-        return fantasy.FantasyEvent(
-            type=subscription,
             description=description,
             factions=selected_factions
         )
 
-    async def _event_type_match(self, event_sub, client_sub):
-        if client_sub.eventType != event_sub.eventType:
-            return False
-        if client_sub.minimumLevel > event_sub.minimumLevel:
-            return False
-        if client_sub.maximumLevel < event_sub.maximumLevel:
-            return False
-        if client_sub.location != event_sub.location:
-            return False
-        return True
+    async def _event_match(self, event: fantasy.FantasyEvent, location: str):
+        return event.location == location
 
     def generate_events(self):
         async def _generate():
@@ -83,28 +70,26 @@ class FantasyImpl(fantasy_grpc.FantasySubscriberServicer):
                     self._events.append(self._generate_fantasy_event())
         asyncio.create_task(_generate())
 
-    async def Subscribe(self, request, context):
-        print("Fantasy: a subscription started")
-        last_events: List[fantasy.FantasyEvent] = []
-
+    async def StreamEvents(self, request_iterator, context):
+        print("Fantasy: subscription stream started")
         try:
-            while not context.done():
-                current_events = []
+            async for request in request_iterator:
+                if request.HasField("sub"):
+                    sub = request.sub
+                    print(f"Subscribe request received: id={sub.subscriptionId}, location={sub.location}")
 
-                async with self._lock:
-                    for event in self._events:
-                        if await self._event_type_match(event.type, request):
-                            current_events.append(event)
+                elif request.HasField("unsub"):
+                    unsub = request.unsub
+                    print(f"Unsubscribe request received: id={unsub.subscriptionId}, location={unsub.location}")
 
-                if current_events != last_events:
-                    for event in current_events:
-                        await context.write(event)
-                    last_events = list(current_events)
+                elif request.HasField("rec"):
+                    rec = request.rec
+                    print(f"Reconnect request received: id={rec.subscription_id}")
 
-                await asyncio.sleep(random.randint(1, 2))
-        except asyncio.CancelledError:
-            print("Fantasy: a client cancelled")
+                else:
+                    print("Fantasy: received unknown control request")
+
         except Exception as ex:
-            print(f"Fantasy: an error occurred: {ex}")
+            print(f"Fantasy: error while streaming: {ex}")
 
-        print("Fantasy: subscription end")
+        print("Fantasy: subscription stream ended")

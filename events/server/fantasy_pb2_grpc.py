@@ -3,7 +3,7 @@
 import grpc
 import warnings
 
-import generated.fantasy_pb2 as fantasy__pb2
+import fantasy_pb2 as fantasy__pb2
 
 GRPC_GENERATED_VERSION = '1.73.0'
 GRPC_VERSION = grpc.__version__
@@ -34,9 +34,9 @@ class FantasySubscriberStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.Subscribe = channel.unary_stream(
-                '/fantasy.FantasySubscriber/Subscribe',
-                request_serializer=fantasy__pb2.FantasySubscription.SerializeToString,
+        self.StreamEvents = channel.stream_stream(
+                '/fantasy.FantasySubscriber/StreamEvents',
+                request_serializer=fantasy__pb2.ControlRequest.SerializeToString,
                 response_deserializer=fantasy__pb2.FantasyEvent.FromString,
                 _registered_method=True)
 
@@ -44,7 +44,7 @@ class FantasySubscriberStub(object):
 class FantasySubscriberServicer(object):
     """Missing associated documentation comment in .proto file."""
 
-    def Subscribe(self, request, context):
+    def StreamEvents(self, request_iterator, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -53,9 +53,9 @@ class FantasySubscriberServicer(object):
 
 def add_FantasySubscriberServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'Subscribe': grpc.unary_stream_rpc_method_handler(
-                    servicer.Subscribe,
-                    request_deserializer=fantasy__pb2.FantasySubscription.FromString,
+            'StreamEvents': grpc.stream_stream_rpc_method_handler(
+                    servicer.StreamEvents,
+                    request_deserializer=fantasy__pb2.ControlRequest.FromString,
                     response_serializer=fantasy__pb2.FantasyEvent.SerializeToString,
             ),
     }
@@ -70,7 +70,7 @@ class FantasySubscriber(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
-    def Subscribe(request,
+    def StreamEvents(request_iterator,
             target,
             options=(),
             channel_credentials=None,
@@ -80,11 +80,11 @@ class FantasySubscriber(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_stream(
-            request,
+        return grpc.experimental.stream_stream(
+            request_iterator,
             target,
-            '/fantasy.FantasySubscriber/Subscribe',
-            fantasy__pb2.FantasySubscription.SerializeToString,
+            '/fantasy.FantasySubscriber/StreamEvents',
+            fantasy__pb2.ControlRequest.SerializeToString,
             fantasy__pb2.FantasyEvent.FromString,
             options,
             channel_credentials,

@@ -2,7 +2,7 @@ import asyncio
 import logging
 import signal
 from grpc import aio
-import generated.fantasy_pb2_grpc as fantasy_grpc
+import fantasy_pb2_grpc as fantasy_grpc
 from fantasy_impl import FantasyImpl
 
 class GrpcServer:
