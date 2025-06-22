@@ -12,7 +12,14 @@ class GrpcServer:
     PORT = 50051
 
     def __init__(self):
-        self.server = aio.server()
+        self.server = aio.server(
+            options=[
+                ('grpc.keepalive_time_ms', 10000),           # send keepalive ping every 10s if no activity
+                ('grpc.keepalive_timeout_ms', 5000),         # wait 5s for pong ack
+                ('grpc.keepalive_permit_without_calls', True)
+            ]
+        )
+        
         self.logger = logging.getLogger("GrpcServer")
         self.weather_impl = WeatherImpl()
         self.fantasy_impl = FantasyImpl()  # Needs to be implemented
