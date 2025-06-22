@@ -84,7 +84,7 @@ class FantasyImpl(fantasy_grpc.FantasySubscriberServicer):
 
                 elif request.HasField("rec"):
                     rec = request.rec
-                    print(f"Reconnect request received: id={rec.subscription_id}")
+                    print(f"Reconnect request received: id={rec.subscriptionId}")
 
                 else:
                     print("Fantasy: received unknown control request")

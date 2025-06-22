@@ -13,7 +13,7 @@ message Unsubscribe {
 }
 
 message Reconnect {
-  string subscription_id = 1;
+  string subscriptionId = 1;
 }
 
 message ControlRequest {

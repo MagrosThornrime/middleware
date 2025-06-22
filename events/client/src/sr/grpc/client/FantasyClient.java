@@ -11,22 +11,88 @@ import java.io.InputStreamReader;
 
 public class FantasyClient {
 
+	private static String subscriptionId;
+	private static FantasySubscriberGrpc.FantasySubscriberStub stub;
+	private static StreamObserver<Fantasy.ControlRequest> requestObserver;
+	private static ManagedChannel channel;
+
 	public static void main(String[] args) throws Exception {
 		String host = "localhost";
 		int port = 50051;
+
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-
-		// Ask user for subscription ID
 		System.out.print("Enter your subscription ID: ");
-		String subscriptionId = reader.readLine().trim();
+		subscriptionId = reader.readLine().trim();
 
-		ManagedChannel channel = ManagedChannelBuilder.forAddress(host, port)
+		connect(host, port);
+
+		System.out.println("Enter commands: sub <location>, unsub <location>, x to exit");
+
+		String line;
+		while ((line = reader.readLine()) != null) {
+			line = line.trim();
+
+			if (line.equalsIgnoreCase("x")) {
+				break;
+			}
+
+			if (requestObserver == null) {
+				// Stream disconnected, reconnect
+				reconnect(host, port);
+				continue;
+			}
+
+			if (line.startsWith("sub ")) {
+				String location = line.substring(4).trim();
+				Fantasy.Subscribe sub = Fantasy.Subscribe.newBuilder()
+						.setSubscriptionId(subscriptionId)
+						.setLocation(location)
+						.build();
+				Fantasy.ControlRequest req = Fantasy.ControlRequest.newBuilder().setSub(sub).build();
+				requestObserver.onNext(req);
+
+			} else if (line.startsWith("unsub ")) {
+				String location = line.substring(6).trim();
+				Fantasy.Unsubscribe unsub = Fantasy.Unsubscribe.newBuilder()
+						.setSubscriptionId(subscriptionId)
+						.setLocation(location)
+						.build();
+				Fantasy.ControlRequest req = Fantasy.ControlRequest.newBuilder().setUnsub(unsub).build();
+				requestObserver.onNext(req);
+
+			} else {
+				System.out.println("Unknown command");
+			}
+		}
+
+		shutdown();
+	}
+
+	private static void connect(String host, int port) {
+		channel = ManagedChannelBuilder.forAddress(host, port)
 				.usePlaintext()
 				.build();
 
-		FantasySubscriberGrpc.FantasySubscriberStub stub = FantasySubscriberGrpc.newStub(channel);
+		stub = FantasySubscriberGrpc.newStub(channel);
 
-		// Create response handler
+		startStream();
+	}
+
+	private static void reconnect(String host, int port) {
+		if (requestObserver != null) {
+			try {
+				requestObserver.onCompleted();
+			} catch (Exception ignored) {}
+		}
+		if (channel != null) {
+			channel.shutdownNow();
+		}
+		connect(host, port);
+	}
+
+	private static void startStream() {
+		requestObserver = null;
+
 		StreamObserver<Fantasy.FantasyEvent> responseObserver = new StreamObserver<>() {
 			@Override
 			public void onNext(Fantasy.FantasyEvent value) {
@@ -41,68 +107,40 @@ public class FantasyClient {
 
 			@Override
 			public void onError(Throwable t) {
-				System.err.println("Error from server: " + t.getMessage());
+				requestObserver = null;
+				reconnect("localhost", 50051);
 			}
 
 			@Override
 			public void onCompleted() {
+				requestObserver = null;
 				System.out.println("Stream closed by server.");
 			}
 		};
 
-		// Open bidirectional stream
-		StreamObserver<Fantasy.ControlRequest> requestObserver = stub.streamEvents(responseObserver);
+		requestObserver = stub.streamEvents(responseObserver);
 
-		// Send initial reconnect request
 		Fantasy.Reconnect reconnect = Fantasy.Reconnect.newBuilder()
 				.setSubscriptionId(subscriptionId)
 				.build();
-
 		Fantasy.ControlRequest recRequest = Fantasy.ControlRequest.newBuilder()
 				.setRec(reconnect)
 				.build();
 
 		requestObserver.onNext(recRequest);
-		System.out.println("Sent reconnect with subscription ID: " + subscriptionId);
+	}
 
-		// CLI interaction
-		System.out.println("Enter commands: sub <location>, unsub <location>, x to exit");
-
-		String line;
-		while ((line = reader.readLine()) != null) {
-			line = line.trim();
-
-			if (line.equalsIgnoreCase("x")) {
-				break;
-			}
-
-			if (line.startsWith("sub ")) {
-				String location = line.substring(4).trim();
-				Fantasy.Subscribe sub = Fantasy.Subscribe.newBuilder()
-						.setSubscriptionId(subscriptionId)
-						.setLocation(location)
-						.build();
-				Fantasy.ControlRequest req = Fantasy.ControlRequest.newBuilder().setSub(sub).build();
-				requestObserver.onNext(req);
-				System.out.println("Sent subscribe to: " + location);
-
-			} else if (line.startsWith("unsub ")) {
-				String location = line.substring(6).trim();
-				Fantasy.Unsubscribe unsub = Fantasy.Unsubscribe.newBuilder()
-						.setSubscriptionId(subscriptionId)
-						.setLocation(location)
-						.build();
-				Fantasy.ControlRequest req = Fantasy.ControlRequest.newBuilder().setUnsub(unsub).build();
-				requestObserver.onNext(req);
-				System.out.println("Sent unsubscribe from: " + location);
-
-			} else {
-				System.out.println("Unknown command");
-			}
+	private static void shutdown() {
+		if (requestObserver != null) {
+			try {
+				requestObserver.onCompleted();
+			} catch (Exception ignored) {}
 		}
-
-		requestObserver.onCompleted();
-		channel.shutdown();
-		System.out.println("Client shutdown");
+		if (channel != null) {
+			channel.shutdown();
+			try {
+				channel.awaitTermination(5, java.util.concurrent.TimeUnit.SECONDS);
+			} catch (InterruptedException ignored) {}
+		}
 	}
 }

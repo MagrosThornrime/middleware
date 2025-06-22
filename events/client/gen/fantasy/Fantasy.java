@@ -1551,12 +1551,12 @@ public final class Fantasy {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>string subscription_id = 1;</code>
+     * <code>string subscriptionId = 1;</code>
      * @return The subscriptionId.
      */
     java.lang.String getSubscriptionId();
     /**
-     * <code>string subscription_id = 1;</code>
+     * <code>string subscriptionId = 1;</code>
      * @return The bytes for subscriptionId.
      */
     com.google.protobuf.ByteString
@@ -1603,11 +1603,11 @@ public final class Fantasy {
               fantasy.Fantasy.Reconnect.class, fantasy.Fantasy.Reconnect.Builder.class);
     }
 
-    public static final int SUBSCRIPTION_ID_FIELD_NUMBER = 1;
+    public static final int SUBSCRIPTIONID_FIELD_NUMBER = 1;
     @SuppressWarnings("serial")
     private volatile java.lang.Object subscriptionId_ = "";
     /**
-     * <code>string subscription_id = 1;</code>
+     * <code>string subscriptionId = 1;</code>
      * @return The subscriptionId.
      */
     @java.lang.Override
@@ -1624,7 +1624,7 @@ public final class Fantasy {
       }
     }
     /**
-     * <code>string subscription_id = 1;</code>
+     * <code>string subscriptionId = 1;</code>
      * @return The bytes for subscriptionId.
      */
     @java.lang.Override
@@ -1699,7 +1699,7 @@ public final class Fantasy {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (37 * hash) + SUBSCRIPTION_ID_FIELD_NUMBER;
+      hash = (37 * hash) + SUBSCRIPTIONID_FIELD_NUMBER;
       hash = (53 * hash) + getSubscriptionId().hashCode();
       hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
@@ -1968,7 +1968,7 @@ public final class Fantasy {
 
       private java.lang.Object subscriptionId_ = "";
       /**
-       * <code>string subscription_id = 1;</code>
+       * <code>string subscriptionId = 1;</code>
        * @return The subscriptionId.
        */
       public java.lang.String getSubscriptionId() {
@@ -1984,7 +1984,7 @@ public final class Fantasy {
         }
       }
       /**
-       * <code>string subscription_id = 1;</code>
+       * <code>string subscriptionId = 1;</code>
        * @return The bytes for subscriptionId.
        */
       public com.google.protobuf.ByteString
@@ -2001,7 +2001,7 @@ public final class Fantasy {
         }
       }
       /**
-       * <code>string subscription_id = 1;</code>
+       * <code>string subscriptionId = 1;</code>
        * @param value The subscriptionId to set.
        * @return This builder for chaining.
        */
@@ -2014,7 +2014,7 @@ public final class Fantasy {
         return this;
       }
       /**
-       * <code>string subscription_id = 1;</code>
+       * <code>string subscriptionId = 1;</code>
        * @return This builder for chaining.
        */
       public Builder clearSubscriptionId() {
@@ -2024,7 +2024,7 @@ public final class Fantasy {
         return this;
       }
       /**
-       * <code>string subscription_id = 1;</code>
+       * <code>string subscriptionId = 1;</code>
        * @param value The bytes for subscriptionId to set.
        * @return This builder for chaining.
        */
@@ -4452,20 +4452,20 @@ public final class Fantasy {
       "\n\rfantasy.proto\022\007fantasy\"5\n\tSubscribe\022\026\n" +
       "\016subscriptionId\030\001 \001(\t\022\020\n\010location\030\002 \001(\t\"" +
       "7\n\013Unsubscribe\022\026\n\016subscriptionId\030\001 \001(\t\022\020" +
-      "\n\010location\030\002 \001(\t\"$\n\tReconnect\022\027\n\017subscri" +
-      "ption_id\030\001 \001(\t\"\204\001\n\016ControlRequest\022!\n\003sub" +
-      "\030\001 \001(\0132\022.fantasy.SubscribeH\000\022%\n\005unsub\030\002 " +
-      "\001(\0132\024.fantasy.UnsubscribeH\000\022!\n\003rec\030\003 \001(\013" +
-      "2\022.fantasy.ReconnectH\000B\005\n\003req\"\241\001\n\014Fantas" +
-      "yEvent\022\020\n\010location\030\001 \001(\t\022\023\n\013description\030" +
-      "\002 \001(\t\022\020\n\010factions\030\003 \003(\t\022\024\n\014minimumLevel\030" +
-      "\004 \001(\005\022\024\n\014maximumLevel\030\005 \001(\005\022,\n\teventType" +
-      "\030\006 \001(\0162\031.fantasy.FantasyEventType*F\n\020Fan" +
-      "tasyEventType\022\013\n\007UNKNOWN\020\000\022\n\n\006BATTLE\020\001\022\013" +
-      "\n\007DUNGEON\020\002\022\014\n\010FESTIVAL\020\0032W\n\021FantasySubs" +
-      "criber\022B\n\014StreamEvents\022\027.fantasy.Control" +
-      "Request\032\025.fantasy.FantasyEvent(\0010\001b\006prot" +
-      "o3"
+      "\n\010location\030\002 \001(\t\"#\n\tReconnect\022\026\n\016subscri" +
+      "ptionId\030\001 \001(\t\"\204\001\n\016ControlRequest\022!\n\003sub\030" +
+      "\001 \001(\0132\022.fantasy.SubscribeH\000\022%\n\005unsub\030\002 \001" +
+      "(\0132\024.fantasy.UnsubscribeH\000\022!\n\003rec\030\003 \001(\0132" +
+      "\022.fantasy.ReconnectH\000B\005\n\003req\"\241\001\n\014Fantasy" +
+      "Event\022\020\n\010location\030\001 \001(\t\022\023\n\013description\030\002" +
+      " \001(\t\022\020\n\010factions\030\003 \003(\t\022\024\n\014minimumLevel\030\004" +
+      " \001(\005\022\024\n\014maximumLevel\030\005 \001(\005\022,\n\teventType\030" +
+      "\006 \001(\0162\031.fantasy.FantasyEventType*F\n\020Fant" +
+      "asyEventType\022\013\n\007UNKNOWN\020\000\022\n\n\006BATTLE\020\001\022\013\n" +
+      "\007DUNGEON\020\002\022\014\n\010FESTIVAL\020\0032W\n\021FantasySubsc" +
+      "riber\022B\n\014StreamEvents\022\027.fantasy.ControlR" +
+      "equest\032\025.fantasy.FantasyEvent(\0010\001b\006proto" +
+      "3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
