@@ -15,35 +15,35 @@ public final class FantasySubscriberGrpc {
   public static final java.lang.String SERVICE_NAME = "fantasy.FantasySubscriber";
 
   // Static method descriptors that strictly reflect the proto.
-  private static volatile io.grpc.MethodDescriptor<fantasy.Fantasy.FantasySubscription,
-      fantasy.Fantasy.FantasyEvent> getSubscribeMethod;
+  private static volatile io.grpc.MethodDescriptor<fantasy.Fantasy.ControlRequest,
+      fantasy.Fantasy.FantasyEvent> getStreamEventsMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "Subscribe",
-      requestType = fantasy.Fantasy.FantasySubscription.class,
+      fullMethodName = SERVICE_NAME + '/' + "StreamEvents",
+      requestType = fantasy.Fantasy.ControlRequest.class,
       responseType = fantasy.Fantasy.FantasyEvent.class,
-      methodType = io.grpc.MethodDescriptor.MethodType.SERVER_STREAMING)
-  public static io.grpc.MethodDescriptor<fantasy.Fantasy.FantasySubscription,
-      fantasy.Fantasy.FantasyEvent> getSubscribeMethod() {
-    io.grpc.MethodDescriptor<fantasy.Fantasy.FantasySubscription, fantasy.Fantasy.FantasyEvent> getSubscribeMethod;
-    if ((getSubscribeMethod = FantasySubscriberGrpc.getSubscribeMethod) == null) {
+      methodType = io.grpc.MethodDescriptor.MethodType.BIDI_STREAMING)
+  public static io.grpc.MethodDescriptor<fantasy.Fantasy.ControlRequest,
+      fantasy.Fantasy.FantasyEvent> getStreamEventsMethod() {
+    io.grpc.MethodDescriptor<fantasy.Fantasy.ControlRequest, fantasy.Fantasy.FantasyEvent> getStreamEventsMethod;
+    if ((getStreamEventsMethod = FantasySubscriberGrpc.getStreamEventsMethod) == null) {
       synchronized (FantasySubscriberGrpc.class) {
-        if ((getSubscribeMethod = FantasySubscriberGrpc.getSubscribeMethod) == null) {
-          FantasySubscriberGrpc.getSubscribeMethod = getSubscribeMethod =
-              io.grpc.MethodDescriptor.<fantasy.Fantasy.FantasySubscription, fantasy.Fantasy.FantasyEvent>newBuilder()
-              .setType(io.grpc.MethodDescriptor.MethodType.SERVER_STREAMING)
-              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "Subscribe"))
+        if ((getStreamEventsMethod = FantasySubscriberGrpc.getStreamEventsMethod) == null) {
+          FantasySubscriberGrpc.getStreamEventsMethod = getStreamEventsMethod =
+              io.grpc.MethodDescriptor.<fantasy.Fantasy.ControlRequest, fantasy.Fantasy.FantasyEvent>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.BIDI_STREAMING)
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "StreamEvents"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  fantasy.Fantasy.FantasySubscription.getDefaultInstance()))
+                  fantasy.Fantasy.ControlRequest.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   fantasy.Fantasy.FantasyEvent.getDefaultInstance()))
-              .setSchemaDescriptor(new FantasySubscriberMethodDescriptorSupplier("Subscribe"))
+              .setSchemaDescriptor(new FantasySubscriberMethodDescriptorSupplier("StreamEvents"))
               .build();
         }
       }
     }
-    return getSubscribeMethod;
+    return getStreamEventsMethod;
   }
 
   /**
@@ -111,9 +111,9 @@ public final class FantasySubscriberGrpc {
 
     /**
      */
-    default void subscribe(fantasy.Fantasy.FantasySubscription request,
+    default io.grpc.stub.StreamObserver<fantasy.Fantasy.ControlRequest> streamEvents(
         io.grpc.stub.StreamObserver<fantasy.Fantasy.FantasyEvent> responseObserver) {
-      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getSubscribeMethod(), responseObserver);
+      return io.grpc.stub.ServerCalls.asyncUnimplementedStreamingCall(getStreamEventsMethod(), responseObserver);
     }
   }
 
@@ -146,10 +146,10 @@ public final class FantasySubscriberGrpc {
 
     /**
      */
-    public void subscribe(fantasy.Fantasy.FantasySubscription request,
+    public io.grpc.stub.StreamObserver<fantasy.Fantasy.ControlRequest> streamEvents(
         io.grpc.stub.StreamObserver<fantasy.Fantasy.FantasyEvent> responseObserver) {
-      io.grpc.stub.ClientCalls.asyncServerStreamingCall(
-          getChannel().newCall(getSubscribeMethod(), getCallOptions()), request, responseObserver);
+      return io.grpc.stub.ClientCalls.asyncBidiStreamingCall(
+          getChannel().newCall(getStreamEventsMethod(), getCallOptions()), responseObserver);
     }
   }
 
@@ -172,10 +172,10 @@ public final class FantasySubscriberGrpc {
     /**
      */
     @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/10918")
-    public io.grpc.stub.BlockingClientCall<?, fantasy.Fantasy.FantasyEvent>
-        subscribe(fantasy.Fantasy.FantasySubscription request) {
-      return io.grpc.stub.ClientCalls.blockingV2ServerStreamingCall(
-          getChannel(), getSubscribeMethod(), getCallOptions(), request);
+    public io.grpc.stub.BlockingClientCall<fantasy.Fantasy.ControlRequest, fantasy.Fantasy.FantasyEvent>
+        streamEvents() {
+      return io.grpc.stub.ClientCalls.blockingBidiStreamingCall(
+          getChannel(), getStreamEventsMethod(), getCallOptions());
     }
   }
 
@@ -193,14 +193,6 @@ public final class FantasySubscriberGrpc {
     protected FantasySubscriberBlockingStub build(
         io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
       return new FantasySubscriberBlockingStub(channel, callOptions);
-    }
-
-    /**
-     */
-    public java.util.Iterator<fantasy.Fantasy.FantasyEvent> subscribe(
-        fantasy.Fantasy.FantasySubscription request) {
-      return io.grpc.stub.ClientCalls.blockingServerStreamingCall(
-          getChannel(), getSubscribeMethod(), getCallOptions(), request);
     }
   }
 
@@ -221,7 +213,7 @@ public final class FantasySubscriberGrpc {
     }
   }
 
-  private static final int METHODID_SUBSCRIBE = 0;
+  private static final int METHODID_STREAM_EVENTS = 0;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -240,10 +232,6 @@ public final class FantasySubscriberGrpc {
     @java.lang.SuppressWarnings("unchecked")
     public void invoke(Req request, io.grpc.stub.StreamObserver<Resp> responseObserver) {
       switch (methodId) {
-        case METHODID_SUBSCRIBE:
-          serviceImpl.subscribe((fantasy.Fantasy.FantasySubscription) request,
-              (io.grpc.stub.StreamObserver<fantasy.Fantasy.FantasyEvent>) responseObserver);
-          break;
         default:
           throw new AssertionError();
       }
@@ -254,6 +242,9 @@ public final class FantasySubscriberGrpc {
     public io.grpc.stub.StreamObserver<Req> invoke(
         io.grpc.stub.StreamObserver<Resp> responseObserver) {
       switch (methodId) {
+        case METHODID_STREAM_EVENTS:
+          return (io.grpc.stub.StreamObserver<Req>) serviceImpl.streamEvents(
+              (io.grpc.stub.StreamObserver<fantasy.Fantasy.FantasyEvent>) responseObserver);
         default:
           throw new AssertionError();
       }
@@ -263,12 +254,12 @@ public final class FantasySubscriberGrpc {
   public static final io.grpc.ServerServiceDefinition bindService(AsyncService service) {
     return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
         .addMethod(
-          getSubscribeMethod(),
-          io.grpc.stub.ServerCalls.asyncServerStreamingCall(
+          getStreamEventsMethod(),
+          io.grpc.stub.ServerCalls.asyncBidiStreamingCall(
             new MethodHandlers<
-              fantasy.Fantasy.FantasySubscription,
+              fantasy.Fantasy.ControlRequest,
               fantasy.Fantasy.FantasyEvent>(
-                service, METHODID_SUBSCRIBE)))
+                service, METHODID_STREAM_EVENTS)))
         .build();
   }
 
@@ -317,7 +308,7 @@ public final class FantasySubscriberGrpc {
         if (result == null) {
           serviceDescriptor = result = io.grpc.ServiceDescriptor.newBuilder(SERVICE_NAME)
               .setSchemaDescriptor(new FantasySubscriberFileDescriptorSupplier())
-              .addMethod(getSubscribeMethod())
+              .addMethod(getStreamEventsMethod())
               .build();
         }
       }
