@@ -44,10 +44,6 @@ import java.util.HashMap;
 import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
-
-import weather.Weather;
-import weather.WeatherSubscriberGrpc;
 
 
 public class grpcClient 
