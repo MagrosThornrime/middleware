@@ -171,16 +171,18 @@ public class grpcClient
 					var key = _GetKey(line);
 					if(_fantasyExecutors.containsKey(key)) {
 						var executor = _fantasyExecutors.get(key);
-						if(executor.isAlive()){
-							executor.receivedStopSignal = true;
-						}
+						executor.cancelStream();
+						Thread.sleep(10);
+						_fantasyExecutors.remove(key);
 					}
 				}
 				else if(line.startsWith("unsub_weather")){
 					var key = _GetKey(line);
 					if(_weatherExecutors.containsKey(key)) {
 						var executor = _weatherExecutors.get(key);
-						executor.receivedStopSignal = true;
+						executor.cancelStream();
+						Thread.sleep(10);
+						_weatherExecutors.remove(key);
 					}
 				}
 				else if(!(line.equals("x") || line.isEmpty())){
@@ -198,10 +200,9 @@ public class grpcClient
 }
 
 class WeatherExecutor extends Thread{
-	boolean receivedStopSignal = false;
-	boolean isStopped = false;
 	WeatherSubscriberGrpc.WeatherSubscriberStub stub;
 	Weather.WeatherSubscription params;
+	volatile ClientCallStreamObserver<Weather.WeatherSubscription> requestStream;
 
 	WeatherExecutor(Weather.WeatherSubscription params, WeatherSubscriberGrpc.WeatherSubscriberStub stub)
 	{
@@ -215,19 +216,15 @@ class WeatherExecutor extends Thread{
 
 		ClientResponseObserver<Weather.WeatherSubscription, Weather.WeatherEvent> responseObserver =
 				new ClientResponseObserver<>() {
-			private ClientCallStreamObserver<Weather.WeatherSubscription> requestStream;
 
 			@Override
 			public void beforeStart(ClientCallStreamObserver<Weather.WeatherSubscription> requestStream) {
-				this.requestStream = requestStream;
+				WeatherExecutor.this.requestStream = requestStream;
 			}
 
 			@Override
 			public void onNext(Weather.WeatherEvent event) {
 				System.out.println("Received weather event: " + event);
-				if (receivedStopSignal) {
-					requestStream.cancel("Client no longer interested", null);
-				}
 			}
 
 			@Override
@@ -235,7 +232,6 @@ class WeatherExecutor extends Thread{
 				Status status = Status.fromThrowable(t);
 				if (status.getCode() == Status.Code.CANCELLED) {
 					System.out.println("Subscription cancelled");
-					isStopped = true;
 				} else {
 					System.err.println("Client got error: " + status);
 				}
@@ -248,21 +244,21 @@ class WeatherExecutor extends Thread{
 		};
 
 		stub.subscribe(params, responseObserver);
-		while(!isStopped){
-            try {
-                Thread.sleep(5);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }
+
 	}
+
+	public void cancelStream() {
+		if (requestStream != null) {
+			requestStream.cancel("Manual cancel", null);
+		}
+	}
+
 }
 
 class FantasyExecutor extends Thread{
-	boolean receivedStopSignal = false;
-	boolean isStopped = false;
 	FantasySubscriberGrpc.FantasySubscriberStub stub;
 	Fantasy.FantasySubscription params;
+	volatile ClientCallStreamObserver<Fantasy.FantasySubscription> requestStream;
 
 	FantasyExecutor(Fantasy.FantasySubscription params, FantasySubscriberGrpc.FantasySubscriberStub stub)
 	{
@@ -276,11 +272,10 @@ class FantasyExecutor extends Thread{
 
 		ClientResponseObserver<Fantasy.FantasySubscription, Fantasy.FantasyEvent> responseObserver =
 				new ClientResponseObserver<>() {
-					private ClientCallStreamObserver<Fantasy.FantasySubscription> requestStream;
 
 					@Override
 					public void beforeStart(ClientCallStreamObserver<Fantasy.FantasySubscription> requestStream) {
-						this.requestStream = requestStream;
+						FantasyExecutor.this.requestStream = requestStream;
 					}
 
 					@Override
@@ -294,9 +289,6 @@ class FantasyExecutor extends Thread{
 						System.out.println("Description: " + event.getDescription());
 						System.out.println();
 
-						if (receivedStopSignal) {
-							requestStream.cancel("Client no longer interested", null);
-						}
 					}
 
 					@Override
@@ -304,7 +296,6 @@ class FantasyExecutor extends Thread{
 						Status status = Status.fromThrowable(t);
 						if (status.getCode() == Status.Code.CANCELLED) {
 							System.out.println("Subscription cancelled");
-							isStopped = true;
 						} else {
 							System.err.println("Client got error: " + status);
 						}
@@ -317,12 +308,11 @@ class FantasyExecutor extends Thread{
 				};
 
 		stub.subscribe(params, responseObserver);
-		while(!isStopped){
-			try {
-				Thread.sleep(5);
-			} catch (InterruptedException e) {
-				throw new RuntimeException(e);
-			}
+	}
+
+	public void cancelStream() {
+		if (requestStream != null) {
+			requestStream.cancel("Manual cancel", null);
 		}
 	}
 }
