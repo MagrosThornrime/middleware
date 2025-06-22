@@ -26,6 +26,12 @@ public class FantasyClient {
 
 		connect(host, port);
 
+		// Wait until connection is established
+		while (requestObserver == null) {
+			System.out.println("Connecting to server...");
+			Thread.sleep(500); // Small delay to wait for stream
+		}
+
 		System.out.println("Enter commands: sub <location>, unsub <location>, x to exit");
 
 		String line;
@@ -37,65 +43,73 @@ public class FantasyClient {
 			}
 
 			if (requestObserver == null) {
-				// Stream disconnected, reconnect
-				reconnect(host, port);
+				System.out.println("Not connected. Please wait...");
 				continue;
 			}
 
-			if (line.startsWith("sub ")) {
-				String location = line.substring(4).trim();
-				Fantasy.Subscribe sub = Fantasy.Subscribe.newBuilder()
-						.setSubscriptionId(subscriptionId)
-						.setLocation(location)
-						.build();
-				Fantasy.ControlRequest req = Fantasy.ControlRequest.newBuilder().setSub(sub).build();
-				requestObserver.onNext(req);
+			try {
+				if (line.startsWith("sub ")) {
+					String location = line.substring(4).trim();
+					Fantasy.Subscribe sub = Fantasy.Subscribe.newBuilder()
+							.setSubscriptionId(subscriptionId)
+							.setLocation(location)
+							.build();
+					Fantasy.ControlRequest req = Fantasy.ControlRequest.newBuilder().setSub(sub).build();
+					requestObserver.onNext(req);
 
-			} else if (line.startsWith("unsub ")) {
-				String location = line.substring(6).trim();
-				Fantasy.Unsubscribe unsub = Fantasy.Unsubscribe.newBuilder()
-						.setSubscriptionId(subscriptionId)
-						.setLocation(location)
-						.build();
-				Fantasy.ControlRequest req = Fantasy.ControlRequest.newBuilder().setUnsub(unsub).build();
-				requestObserver.onNext(req);
+				} else if (line.startsWith("unsub ")) {
+					String location = line.substring(6).trim();
+					Fantasy.Unsubscribe unsub = Fantasy.Unsubscribe.newBuilder()
+							.setSubscriptionId(subscriptionId)
+							.setLocation(location)
+							.build();
+					Fantasy.ControlRequest req = Fantasy.ControlRequest.newBuilder().setUnsub(unsub).build();
+					requestObserver.onNext(req);
 
-			} else {
-				System.out.println("Unknown command");
+				} else {
+					System.out.println("Unknown command");
+				}
+			} catch (Exception e) {
+				System.out.println("Failed to send request: " + e.getMessage());
 			}
 		}
 
 		shutdown();
 	}
 
+	// Set up the gRPC channel and stub, then start the stream
 	private static void connect(String host, int port) {
 		channel = ManagedChannelBuilder.forAddress(host, port)
-				.usePlaintext()
+				.usePlaintext()  // No TLS (insecure)
 				.build();
 
 		stub = FantasySubscriberGrpc.newStub(channel);
 
-		startStream();
+		startStream(); // Start bidirectional streaming
 	}
 
+	// Used to reconnect to the server when the stream is broken
 	private static void reconnect(String host, int port) {
 		if (requestObserver != null) {
 			try {
-				requestObserver.onCompleted();
+				requestObserver.onCompleted();  // Notify the server the stream is closing
 			} catch (Exception ignored) {}
 		}
 		if (channel != null) {
-			channel.shutdownNow();
+			channel.shutdownNow();  // Shutdown the old channel
 		}
-		connect(host, port);
+		connect(host, port);  // Re-establish everything
 	}
 
+	// Starts the streaming interaction with the server
 	private static void startStream() {
 		requestObserver = null;
 
+		// Handle incoming messages (FantasyEvent) from the server
 		StreamObserver<Fantasy.FantasyEvent> responseObserver = new StreamObserver<>() {
 			@Override
 			public void onNext(Fantasy.FantasyEvent value) {
+				// Print event details
 				System.out.println("Event received:");
 				System.out.println(" Location: " + value.getLocation());
 				System.out.println(" Description: " + value.getDescription());
@@ -107,29 +121,33 @@ public class FantasyClient {
 
 			@Override
 			public void onError(Throwable t) {
+				// Error occurred (e.g., server disconnected), so nullify and reconnect
 				requestObserver = null;
 				reconnect("localhost", 50051);
 			}
 
 			@Override
 			public void onCompleted() {
+				// Stream completed gracefully
 				requestObserver = null;
 				System.out.println("Stream closed by server.");
 			}
 		};
 
+		// Start the actual stream with the server
 		requestObserver = stub.streamEvents(responseObserver);
 
+		// Send an initial "reconnect" message with the subscription ID
 		Fantasy.Reconnect reconnect = Fantasy.Reconnect.newBuilder()
 				.setSubscriptionId(subscriptionId)
 				.build();
 		Fantasy.ControlRequest recRequest = Fantasy.ControlRequest.newBuilder()
 				.setRec(reconnect)
 				.build();
-
 		requestObserver.onNext(recRequest);
 	}
 
+	// Clean up resources on shutdown
 	private static void shutdown() {
 		if (requestObserver != null) {
 			try {
