@@ -12,3 +12,9 @@ dynamic-grpc/server/__pycache__
 
 dynamic-grpc/client/.idea
 dynamic-grpc/client/out
+
+dynamic-ice/server/.idea
+dynamic-ice/server/__pycache__
+
+dynamic-ice/client/.idea
+dynamic-ice/client/out
