@@ -8,11 +8,20 @@ from fantasy_impl import FantasyImpl
 class GrpcServer:
     ADDRESS: str = "[::]"
     PORT: int = 50051
+    KEEPALIVE_OPTIONS: list[tuple[str, int]] = [
+        ('grpc.keepalive_time_ms', 10000),
+        ('grpc.keepalive_timeout_ms', 5000),
+        ('grpc.keepalive_permit_without_calls', 1),
+        ('grpc.http2.max_pings_without_data', 0),
+        ('grpc.http2.min_time_between_pings_ms', 10000),
+        ('grpc.http2.min_ping_interval_without_data_ms', 10000),
+    ]
 
     def __init__(self):
-        self.server: aio.Server = aio.server()
+        self.server: aio.Server = aio.server(options=self.KEEPALIVE_OPTIONS)
         self.logger: logging.Logger = logging.getLogger("GrpcServer")
         self.fantasy_impl: FantasyImpl = FantasyImpl()
+
 
     async def start(self) -> None:
         """Registers services and starts the gRPC server."""
