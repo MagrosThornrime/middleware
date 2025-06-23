@@ -2,12 +2,9 @@
 #
 
 import Ice
-
-Ice.updateModule("CalcModule")
+Ice.updateModule("PrinterModule")
 
 # Modules:
-import calculator_ice
-
+import printer_ice
 
 # Submodules:
-

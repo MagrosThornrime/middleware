@@ -11,49 +11,53 @@ import java.util.Arrays;
 import java.util.Objects;
 
 public class IceClient {
+
+	static ObjectPrx base;
+
 	public static void main(String[] args) {
 		int status = 0;
 		Communicator communicator = null;
 
 		try {
-			// 1. Inicjalizacja ICE
 			communicator = Util.initialize(args);
-
-			// 2. Uzyskanie referencji obiektu na podstawie linii w pliku konfiguracyjnym (wówczas aplikację należy uruchomić z argumentem --Ice.config=config.client)
-			//ObjectPrx base1 = communicator.propertyToProxy("Calc1.Proxy");
-
-			// 2. Uzyskanie referencji obiektu - to samo co powyżej, ale mniej ładnie
-			ObjectPrx base = communicator.stringToProxy("calc/calc11:tcp -h 127.0.0.2 -p 10000 -z : udp -h 127.0.0.2 -p 10000 -z"); //opcja -z włącza możliwość kompresji wiadomości
+			base = communicator.stringToProxy("devices/printer:tcp -h 127.0.0.2 -p 10000 -z : udp -h 127.0.0.2 -p 10000 -z"); //opcja -z włącza możliwość kompresji wiadomości
 
 			if (base == null) throw new Error("Invalid proxy");
 
 			String line = null;
 			BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-			double result;
+
+			String[] printedStrings;
 
 			do {
 				try {
 					System.out.print("==> ");
 					line = in.readLine();
 					switch (line) {
-						case "divide":
-							result = calcOperation(base, "divide", 3.0d, 0.4d);
-							System.out.println("RESULT = " + result);
+						case "duplicated":
+							String[] strings = new String[]{"bajo", "jajo", "kłaczki"};
+							var count = 3;
+							printedStrings = printDuplicates(strings, count);
+							System.out.println("RESULT = " + Arrays.toString(printedStrings));
 							break;
-						case "subtract":
-							result = calcOperation(base, "subtract", 7.0d, 4.0d);
-							System.out.println("RESULT = " + result);
+						case "range":
+							printedStrings = printRange(3, 15, 4);
+							System.out.println("RESULT = " + Arrays.toString(printedStrings));
 							break;
-						case "map":
-							int[] nums = {1, 2, 5, 8};
-							double[] numsResult = mapOperation(base, nums);
-							System.out.println("RESULT = " + Arrays.toString(numsResult));
+						case "fibonacci":
+							printedStrings = printFibonacci(4);
+							System.out.println("RESULT = " + Arrays.toString(printedStrings));
 							break;
-						case "desc":
-							System.out.println("RESULT = " + getDescriptionOperation(base));
+						case "description":
+							System.out.println("RESULT = " + getDescription());
+							break;
+						case "printed":
+							System.out.println("RESULT = " + getPrinted());
+							break;
+						case "x":
 							break;
 						default:
-							System.out.println("???");
+							System.out.println("Wrong command");
 					}
 				} catch (IOException | TwowayOnlyException | UnknownException ex) {
 					ex.printStackTrace(System.err);
@@ -80,63 +84,94 @@ public class IceClient {
 		System.exit(status);
 	}
 
-	private static double calcOperation(ObjectPrx base, String operationName, double a, double b){
-		System.out.println("Operation '" + operationName + "' ...");
-
+	private static String[] printDuplicates(String[] strings, int count) {
 		OutputStream outStream = new OutputStream(base.ice_getCommunicator());
 		outStream.startEncapsulation();
-		outStream.writeDouble(a);
-		outStream.writeDouble(b);
+		outStream.writeStringSeq(strings);
+		outStream.writeInt(count);
 		outStream.endEncapsulation();
 
 		try {
-			Object.Ice_invokeResult result = base.ice_invoke(operationName, OperationMode.Normal, outStream.finished());
+			Object.Ice_invokeResult result = base.ice_invoke("printDuplicated", OperationMode.Normal, outStream.finished());
 			InputStream inStream = new InputStream(base.ice_getCommunicator(), result.outParams);
 			inStream.startEncapsulation();
-			double returnValue = inStream.readDouble();
+			var returnValue = inStream.readStringSeq();
 			inStream.endEncapsulation();
 			return returnValue;
 		} catch (Exception e) {
-			throw new RuntimeException("Server returned an error during " + operationName + " operation: " + e);
+			throw new RuntimeException("Server returned an error during 'printDuplicated' operation: " + e);
 		}
 	}
 
-	private static double[] mapOperation(ObjectPrx base, int[] nums) {
-		System.out.println("Operation 'map' ...");
-
+	private static String[] printRange(int startNum, int endNum, int step){
 		OutputStream outStream = new OutputStream(base.ice_getCommunicator());
 		outStream.startEncapsulation();
-		outStream.writeIntSeq(nums);
+		outStream.writeInt(startNum);
+		outStream.writeInt(endNum);
+		outStream.writeInt(step);
 		outStream.endEncapsulation();
 
 		try {
-			Object.Ice_invokeResult result = base.ice_invoke("map", OperationMode.Normal, outStream.finished());
+			Object.Ice_invokeResult result = base.ice_invoke("printRange", OperationMode.Normal, outStream.finished());
 			InputStream inStream = new InputStream(base.ice_getCommunicator(), result.outParams);
 			inStream.startEncapsulation();
-			double[] returnValue = inStream.readDoubleSeq();
+			var returnValue = inStream.readStringSeq();
 			inStream.endEncapsulation();
 			return returnValue;
 		} catch (Exception e) {
-			throw new RuntimeException("Server returned an error for map operation: " + e);
+			throw new RuntimeException("Server returned an error during 'printRange' operation: " + e);
 		}
 	}
 
-	private static String getDescriptionOperation(ObjectPrx base) {
-		System.out.println("Operation 'getdescription' ...");
+	private static String[] printFibonacci(int count){
+		OutputStream outStream = new OutputStream(base.ice_getCommunicator());
+		outStream.startEncapsulation();
+		outStream.writeInt(count);
+		outStream.endEncapsulation();
 
+		try {
+			Object.Ice_invokeResult result = base.ice_invoke("printFibonacci", OperationMode.Normal, outStream.finished());
+			InputStream inStream = new InputStream(base.ice_getCommunicator(), result.outParams);
+			inStream.startEncapsulation();
+			var returnValue = inStream.readStringSeq();
+			inStream.endEncapsulation();
+			return returnValue;
+		} catch (Exception e) {
+			throw new RuntimeException("Server returned an error during 'printFibonacci' operation: " + e);
+		}
+	}
+
+	private static String getDescription() {
 		OutputStream outStream = new OutputStream(base.ice_getCommunicator());
 		outStream.startEncapsulation();
 		outStream.endEncapsulation();
 
 		try {
-			Object.Ice_invokeResult result = base.ice_invoke("getdescription", OperationMode.Idempotent, outStream.finished());
+			Object.Ice_invokeResult result = base.ice_invoke("getDescription", OperationMode.Idempotent, outStream.finished());
 			InputStream inStream = new InputStream(base.ice_getCommunicator(), result.outParams);
 			inStream.startEncapsulation();
 			String returnValue = inStream.readString();
 			inStream.endEncapsulation();
 			return returnValue;
 		} catch (Exception e) {
-			throw new RuntimeException("Server returned an error for map operation: " + e);
+			throw new RuntimeException("Server returned an error for 'getDescription' operation: " + e);
+		}
+	}
+
+	private static int getPrinted() {
+		OutputStream outStream = new OutputStream(base.ice_getCommunicator());
+		outStream.startEncapsulation();
+		outStream.endEncapsulation();
+
+		try {
+			Object.Ice_invokeResult result = base.ice_invoke("getPrintedStringsNum", OperationMode.Idempotent, outStream.finished());
+			InputStream inStream = new InputStream(base.ice_getCommunicator(), result.outParams);
+			inStream.startEncapsulation();
+			var returnValue = inStream.readInt();
+			inStream.endEncapsulation();
+			return returnValue;
+		} catch (Exception e) {
+			throw new RuntimeException("Server returned an error for 'getPrinted' operation: " + e);
 		}
 	}
 }
