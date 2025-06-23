@@ -74,7 +74,11 @@ class FantasyImpl(fantasy_grpc.FantasySubscriberServicer):
                     async with self._lock:
                         if user not in self._subscriptions:
                             self._subscriptions[user] = []
-                        self._contexts[user] = context
+                        if user not in self._contexts:
+                            self._contexts[user] = context
+                        else:
+                            print(f"User {user} already active")
+                            return
                     print(f"Subscriber connected: {user}")
 
                 else:
@@ -88,6 +92,7 @@ class FantasyImpl(fantasy_grpc.FantasySubscriberServicer):
 
         print("Fantasy: subscription stream ended")
         async with self._lock:
-            del self._subscriptions[user]
-            del self._contexts[user]
+            if user:
+                del self._subscriptions[user]
+                del self._contexts[user]
         self.save_to_json()
