@@ -6,3 +6,9 @@ events/server/data.json
 events/client/.idea/
 events/client/out/
 events/client/protoc-gen-grpc-java-1.71*
+
+dynamic/server/venv
+dynamic/server/__pycache__
+
+dynamic/client/.idea
+dynamic/client/out
