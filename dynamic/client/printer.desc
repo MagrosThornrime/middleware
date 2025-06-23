@@ -1,0 +1,21 @@
+
+
+printer.protoprinter"4
+TextTask
+text (	Rtext
+count (Rcount"6
+TextRequest'
+tasks (2.printer.TextTaskRtasks"+
+PrinterResponse
+message (	Rmessage" 
+Number
+number (Rnumber"[
+Range 
+startNumber (RstartNumber
+	endNumber (R	endNumber
+step (Rstep2Ä
+Printer@
+PrintStrings.printer.TextRequest.printer.PrinterResponse0=
+PrintFibonacci.printer.Number.printer.PrinterResponse08
+
+PrintRange.printer.Range.printer.PrinterResponse0bproto3

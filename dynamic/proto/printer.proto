@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package printer;
+
+
+message TextTask{
+  string text = 1;
+  int32 count = 2;
+}
+
+message TextRequest{
+  repeated TextTask tasks = 1;
+}
+
+message PrinterResponse {
+  string message = 1;
+}
+
+message Number {
+  int32 number = 1;
+}
+
+message Range {
+  int32 startNumber = 1;
+  int32 endNumber = 2;
+  int32 step = 3;
+}
+
+service Printer {
+    rpc PrintStrings(TextRequest) returns (stream PrinterResponse);
+    rpc PrintFibonacci(Number) returns (stream PrinterResponse);
+    rpc PrintRange(Range) returns (stream PrinterResponse);
+};
