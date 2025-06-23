@@ -1,6 +1,6 @@
 import asyncio
 import random
-from typing import List
+from typing import List, Dict, Optional
 import json
 import os
 
@@ -13,30 +13,36 @@ from events_generator import EventsGenerator
 class FantasyImpl(fantasy_grpc.FantasySubscriberServicer):
     def __init__(self):
         self.generator = EventsGenerator()
-        self._lock = asyncio.Lock()
+        self._lock: asyncio.Lock = asyncio.Lock()
         self._events: List[fantasy.FantasyEvent] = []
-        self._subscriptions = {}
-        self._contexts = {}
-        self._buffers = {}
+        self._subscriptions: Dict[str, List[str]] = {}  # user_id -> list of locations
+        self._contexts: Dict[str, asyncio.StreamWriter] = {}  # user_id -> gRPC stream context
+        self._buffers: Dict[str, List[fantasy.FantasyEvent]] = {}  # user_id -> buffered events when offline
 
-    async def generate_and_send(self):
+    async def generate_and_send(self) -> None:
+        """Generates random events and sends them to all subscribed users."""
         async with self._lock:
             self._events.clear()
             for _ in range(random.randint(3, 10)):
                 self._events.append(self.generator.generate_fantasy_event())
+
             for user, subs in self._subscriptions.items():
                 for event in self._events:
                     if event.location in subs:
                         if user in self._contexts:
                             context = self._contexts[user]
+                            # Send buffered events first
                             for old_event in self._buffers[user]:
                                 await context.write(old_event)
                             self._buffers[user] = []
+                            # Send current event
                             await context.write(event)
                         else:
+                            # Buffer event if user is not connected
                             self._buffers[user].append(event)
 
-    async def load_from_json(self):
+    async def load_from_json(self) -> None:
+        """Loads subscription data from a JSON file."""
         if not os.path.exists("data.json"):
             with open("data.json", 'w') as f:
                 json.dump({}, f, indent=2)
@@ -45,18 +51,21 @@ class FantasyImpl(fantasy_grpc.FantasySubscriberServicer):
             async with self._lock:
                 self._subscriptions = json.load(f)
 
-    async def save_to_json(self):
+    async def save_to_json(self) -> None:
+        """Saves subscription data to a JSON file."""
         with open("data.json", 'w') as f:
             async with self._lock:
                 json.dump(self._subscriptions, f, indent=2)
 
-    async def StreamEvents(self, request_iterator, context):
+    async def StreamEvents(self, request_iterator, context) -> None:
+        """Handles the bidirectional gRPC stream for event subscription."""
         print("Fantasy: subscription stream started")
 
         await self.load_from_json()
         print(self._subscriptions)
 
-        user = None
+        user: Optional[str] = None
+
         try:
             async for request in request_iterator:
                 if request.HasField("sub"):
@@ -89,6 +98,7 @@ class FantasyImpl(fantasy_grpc.FantasySubscriberServicer):
                             print(f"User {user} already active")
                             return
                     print(f"Subscriber connected: {user}")
+
                 elif request.HasField("dis"):
                     async with self._lock:
                         if user:
@@ -96,6 +106,7 @@ class FantasyImpl(fantasy_grpc.FantasySubscriberServicer):
                             del self._contexts[user]
                             del self._buffers[user]
                     print(f"User disconnected: {user}")
+
                 else:
                     print("Fantasy: received unknown control request")
 
