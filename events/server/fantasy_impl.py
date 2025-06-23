@@ -29,9 +29,7 @@ class FantasyImpl(fantasy_grpc.FantasySubscriberServicer):
                     self._events.append(self.generator.generate_fantasy_event())
         asyncio.create_task(_generate())
 
-    async def StreamEvents(self, request_iterator, context):
-        print("Fantasy: subscription stream started")
-
+    def load_from_json(self):
         if not os.path.exists("data.json"):
             with open("data.json", 'w') as f:
                 json.dump({}, f, indent=2)
@@ -39,6 +37,15 @@ class FantasyImpl(fantasy_grpc.FantasySubscriberServicer):
         with open("data.json", "r") as f:
             self._subscribers = json.load(f)
 
+    def save_to_json(self):
+        with open("data.json", 'w') as f:
+            json.dump(self._subscribers, f, indent=2)
+
+    async def StreamEvents(self, request_iterator, context):
+        print("Fantasy: subscription stream started")
+
+        self.load_from_json()
+        
         user = None
         try:
             async for request in request_iterator:
@@ -67,10 +74,11 @@ class FantasyImpl(fantasy_grpc.FantasySubscriberServicer):
                     print("Fantasy: received unknown control request")
 
                 print(self._subscribers)
-                with open("data.json", 'w') as f:
-                    json.dump(self._subscribers, f, indent=2)
+                self.save_to_json()
 
         except Exception as ex:
             print(f"Fantasy: error while streaming: {ex}")
 
         print("Fantasy: subscription stream ended")
+        del self._subscribers[user]
+        self.save_to_json()
