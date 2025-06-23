@@ -51,7 +51,6 @@ public class FantasyClient {
 				if (line.startsWith("sub ")) {
 					String location = line.substring(4).trim();
 					Fantasy.Subscribe sub = Fantasy.Subscribe.newBuilder()
-							.setSubscriptionId(subscriptionId)
 							.setLocation(location)
 							.build();
 					Fantasy.ControlRequest req = Fantasy.ControlRequest.newBuilder().setSub(sub).build();
@@ -60,7 +59,6 @@ public class FantasyClient {
 				} else if (line.startsWith("unsub ")) {
 					String location = line.substring(6).trim();
 					Fantasy.Unsubscribe unsub = Fantasy.Unsubscribe.newBuilder()
-							.setSubscriptionId(subscriptionId)
 							.setLocation(location)
 							.build();
 					Fantasy.ControlRequest req = Fantasy.ControlRequest.newBuilder().setUnsub(unsub).build();
@@ -103,48 +101,65 @@ public class FantasyClient {
 
 	// Starts the streaming interaction with the server
 	private static void startStream() {
-		requestObserver = null;
+		try {
+			requestObserver = null;
 
-		// Handle incoming messages (FantasyEvent) from the server
-		StreamObserver<Fantasy.FantasyEvent> responseObserver = new StreamObserver<>() {
-			@Override
-			public void onNext(Fantasy.FantasyEvent value) {
-				// Print event details
-				System.out.println("Event received:");
-				System.out.println(" Location: " + value.getLocation());
-				System.out.println(" Description: " + value.getDescription());
-				System.out.println(" Factions: " + value.getFactionsList());
-				System.out.println(" Level Range: " + value.getMinimumLevel() + "-" + value.getMaximumLevel());
-				System.out.println(" Type: " + value.getEventType());
-				System.out.println("------------------------");
+			StreamObserver<Fantasy.FantasyEvent> responseObserver = new StreamObserver<>() {
+				@Override
+				public void onNext(Fantasy.FantasyEvent value) {
+					System.out.println("Event received:");
+					System.out.println(" Location: " + value.getLocation());
+					System.out.println(" Description: " + value.getDescription());
+					System.out.println(" Factions: " + value.getFactionsList());
+					System.out.println(" Level Range: " + value.getMinimumLevel() + "-" + value.getMaximumLevel());
+					System.out.println(" Type: " + value.getEventType());
+					System.out.println("------------------------");
+				}
+
+				@Override
+				public void onError(Throwable t) {
+					System.out.println("Stream error: " + t.getMessage());
+					requestObserver = null;
+
+					// Attempt to reconnect with a delay
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException ignored) {}
+
+					reconnect("localhost", 50051);
+				}
+
+				@Override
+				public void onCompleted() {
+					System.out.println("Stream closed by server.");
+					requestObserver = null;
+				}
+			};
+
+			requestObserver = stub.streamEvents(responseObserver);
+
+			// Send reconnect message safely
+			if (requestObserver != null) {
+				Fantasy.Reconnect reconnect = Fantasy.Reconnect.newBuilder()
+						.setSubscriptionId(subscriptionId)
+						.build();
+				Fantasy.ControlRequest recRequest = Fantasy.ControlRequest.newBuilder()
+						.setRec(reconnect)
+						.build();
+				requestObserver.onNext(recRequest);
 			}
 
-			@Override
-			public void onError(Throwable t) {
-				// Error occurred (e.g., server disconnected), so nullify and reconnect
-				requestObserver = null;
-				reconnect("localhost", 50051);
-			}
+		} catch (Exception e) {
+			System.out.println("Failed to start stream: " + e.getMessage());
+			requestObserver = null;
 
-			@Override
-			public void onCompleted() {
-				// Stream completed gracefully
-				requestObserver = null;
-				System.out.println("Stream closed by server.");
-			}
-		};
+			// Retry connecting in 1 second
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException ignored) {}
 
-		// Start the actual stream with the server
-		requestObserver = stub.streamEvents(responseObserver);
-
-		// Send an initial "reconnect" message with the subscription ID
-		Fantasy.Reconnect reconnect = Fantasy.Reconnect.newBuilder()
-				.setSubscriptionId(subscriptionId)
-				.build();
-		Fantasy.ControlRequest recRequest = Fantasy.ControlRequest.newBuilder()
-				.setRec(reconnect)
-				.build();
-		requestObserver.onNext(recRequest);
+			reconnect("localhost", 50051);
+		}
 	}
 
 	// Clean up resources on shutdown

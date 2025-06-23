@@ -3,12 +3,10 @@ syntax = "proto3";
 package fantasy;
 
 message Subscribe {
-  string subscriptionId = 1;
   string location = 2;
 }
 
 message Unsubscribe {
-  string subscriptionId = 1;
   string location = 2;
 }
 

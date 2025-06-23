@@ -1,6 +1,8 @@
 import asyncio
 import random
 from typing import List
+import json
+import os
 
 import fantasy_pb2_grpc as fantasy_grpc
 import fantasy_pb2 as fantasy
@@ -13,6 +15,7 @@ class FantasyImpl(fantasy_grpc.FantasySubscriberServicer):
         self.generator = EventsGenerator()
         self._lock = asyncio.Lock()
         self._events: List[fantasy.FantasyEvent] = []
+        self._subscribers = {}
         
 
     async def _event_match(self, event: fantasy.FantasyEvent, location: str):
@@ -28,22 +31,44 @@ class FantasyImpl(fantasy_grpc.FantasySubscriberServicer):
 
     async def StreamEvents(self, request_iterator, context):
         print("Fantasy: subscription stream started")
+
+        if not os.path.exists("data.json"):
+            with open("data.json", 'w') as f:
+                json.dump({}, f, indent=2)
+        
+        with open("data.json", "r") as f:
+            self._subscribers = json.load(f)
+
+        user = None
         try:
             async for request in request_iterator:
                 if request.HasField("sub"):
                     sub = request.sub
-                    print(f"Subscribe request received: id={sub.subscriptionId}, location={sub.location}")
+                    location = sub.location
+                    if location not in self._subscribers[user]:
+                        self._subscribers[user].append(location)
+                    print(f"Subscribe request received: id={user}, location={location}")
 
                 elif request.HasField("unsub"):
                     unsub = request.unsub
-                    print(f"Unsubscribe request received: id={unsub.subscriptionId}, location={unsub.location}")
+                    location = unsub.location
+                    if location in self._subscribers[user]:
+                        self._subscribers[user].remove(location)
+                    print(f"Unsubscribe request received: id={user}, location={location}")
 
                 elif request.HasField("rec"):
                     rec = request.rec
-                    print(f"Reconnect request received: id={rec.subscriptionId}")
+                    user = rec.subscriptionId
+                    if user not in self._subscribers:
+                        self._subscribers[user] = []
+                    print(f"Subscriber connected: {user}")
 
                 else:
                     print("Fantasy: received unknown control request")
+
+                print(self._subscribers)
+                with open("data.json", 'w') as f:
+                    json.dump(self._subscribers, f, indent=2)
 
         except Exception as ex:
             print(f"Fantasy: error while streaming: {ex}")

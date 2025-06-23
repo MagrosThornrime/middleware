@@ -145,18 +145,6 @@ public final class Fantasy {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>string subscriptionId = 1;</code>
-     * @return The subscriptionId.
-     */
-    java.lang.String getSubscriptionId();
-    /**
-     * <code>string subscriptionId = 1;</code>
-     * @return The bytes for subscriptionId.
-     */
-    com.google.protobuf.ByteString
-        getSubscriptionIdBytes();
-
-    /**
      * <code>string location = 2;</code>
      * @return The location.
      */
@@ -181,7 +169,6 @@ public final class Fantasy {
       super(builder);
     }
     private Subscribe() {
-      subscriptionId_ = "";
       location_ = "";
     }
 
@@ -208,45 +195,6 @@ public final class Fantasy {
       return fantasy.Fantasy.internal_static_fantasy_Subscribe_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               fantasy.Fantasy.Subscribe.class, fantasy.Fantasy.Subscribe.Builder.class);
-    }
-
-    public static final int SUBSCRIPTIONID_FIELD_NUMBER = 1;
-    @SuppressWarnings("serial")
-    private volatile java.lang.Object subscriptionId_ = "";
-    /**
-     * <code>string subscriptionId = 1;</code>
-     * @return The subscriptionId.
-     */
-    @java.lang.Override
-    public java.lang.String getSubscriptionId() {
-      java.lang.Object ref = subscriptionId_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        subscriptionId_ = s;
-        return s;
-      }
-    }
-    /**
-     * <code>string subscriptionId = 1;</code>
-     * @return The bytes for subscriptionId.
-     */
-    @java.lang.Override
-    public com.google.protobuf.ByteString
-        getSubscriptionIdBytes() {
-      java.lang.Object ref = subscriptionId_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        subscriptionId_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
     }
 
     public static final int LOCATION_FIELD_NUMBER = 2;
@@ -302,9 +250,6 @@ public final class Fantasy {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(subscriptionId_)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, subscriptionId_);
-      }
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(location_)) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 2, location_);
       }
@@ -317,9 +262,6 @@ public final class Fantasy {
       if (size != -1) return size;
 
       size = 0;
-      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(subscriptionId_)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, subscriptionId_);
-      }
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(location_)) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, location_);
       }
@@ -338,8 +280,6 @@ public final class Fantasy {
       }
       fantasy.Fantasy.Subscribe other = (fantasy.Fantasy.Subscribe) obj;
 
-      if (!getSubscriptionId()
-          .equals(other.getSubscriptionId())) return false;
       if (!getLocation()
           .equals(other.getLocation())) return false;
       if (!getUnknownFields().equals(other.getUnknownFields())) return false;
@@ -353,8 +293,6 @@ public final class Fantasy {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (37 * hash) + SUBSCRIPTIONID_FIELD_NUMBER;
-      hash = (53 * hash) + getSubscriptionId().hashCode();
       hash = (37 * hash) + LOCATION_FIELD_NUMBER;
       hash = (53 * hash) + getLocation().hashCode();
       hash = (29 * hash) + getUnknownFields().hashCode();
@@ -486,7 +424,6 @@ public final class Fantasy {
       public Builder clear() {
         super.clear();
         bitField0_ = 0;
-        subscriptionId_ = "";
         location_ = "";
         return this;
       }
@@ -522,9 +459,6 @@ public final class Fantasy {
       private void buildPartial0(fantasy.Fantasy.Subscribe result) {
         int from_bitField0_ = bitField0_;
         if (((from_bitField0_ & 0x00000001) != 0)) {
-          result.subscriptionId_ = subscriptionId_;
-        }
-        if (((from_bitField0_ & 0x00000002) != 0)) {
           result.location_ = location_;
         }
       }
@@ -573,14 +507,9 @@ public final class Fantasy {
 
       public Builder mergeFrom(fantasy.Fantasy.Subscribe other) {
         if (other == fantasy.Fantasy.Subscribe.getDefaultInstance()) return this;
-        if (!other.getSubscriptionId().isEmpty()) {
-          subscriptionId_ = other.subscriptionId_;
-          bitField0_ |= 0x00000001;
-          onChanged();
-        }
         if (!other.getLocation().isEmpty()) {
           location_ = other.location_;
-          bitField0_ |= 0x00000002;
+          bitField0_ |= 0x00000001;
           onChanged();
         }
         this.mergeUnknownFields(other.getUnknownFields());
@@ -609,14 +538,9 @@ public final class Fantasy {
               case 0:
                 done = true;
                 break;
-              case 10: {
-                subscriptionId_ = input.readStringRequireUtf8();
-                bitField0_ |= 0x00000001;
-                break;
-              } // case 10
               case 18: {
                 location_ = input.readStringRequireUtf8();
-                bitField0_ |= 0x00000002;
+                bitField0_ |= 0x00000001;
                 break;
               } // case 18
               default: {
@@ -635,78 +559,6 @@ public final class Fantasy {
         return this;
       }
       private int bitField0_;
-
-      private java.lang.Object subscriptionId_ = "";
-      /**
-       * <code>string subscriptionId = 1;</code>
-       * @return The subscriptionId.
-       */
-      public java.lang.String getSubscriptionId() {
-        java.lang.Object ref = subscriptionId_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          subscriptionId_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>string subscriptionId = 1;</code>
-       * @return The bytes for subscriptionId.
-       */
-      public com.google.protobuf.ByteString
-          getSubscriptionIdBytes() {
-        java.lang.Object ref = subscriptionId_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          subscriptionId_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>string subscriptionId = 1;</code>
-       * @param value The subscriptionId to set.
-       * @return This builder for chaining.
-       */
-      public Builder setSubscriptionId(
-          java.lang.String value) {
-        if (value == null) { throw new NullPointerException(); }
-        subscriptionId_ = value;
-        bitField0_ |= 0x00000001;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string subscriptionId = 1;</code>
-       * @return This builder for chaining.
-       */
-      public Builder clearSubscriptionId() {
-        subscriptionId_ = getDefaultInstance().getSubscriptionId();
-        bitField0_ = (bitField0_ & ~0x00000001);
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string subscriptionId = 1;</code>
-       * @param value The bytes for subscriptionId to set.
-       * @return This builder for chaining.
-       */
-      public Builder setSubscriptionIdBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) { throw new NullPointerException(); }
-        checkByteStringIsUtf8(value);
-        subscriptionId_ = value;
-        bitField0_ |= 0x00000001;
-        onChanged();
-        return this;
-      }
 
       private java.lang.Object location_ = "";
       /**
@@ -751,7 +603,7 @@ public final class Fantasy {
           java.lang.String value) {
         if (value == null) { throw new NullPointerException(); }
         location_ = value;
-        bitField0_ |= 0x00000002;
+        bitField0_ |= 0x00000001;
         onChanged();
         return this;
       }
@@ -761,7 +613,7 @@ public final class Fantasy {
        */
       public Builder clearLocation() {
         location_ = getDefaultInstance().getLocation();
-        bitField0_ = (bitField0_ & ~0x00000002);
+        bitField0_ = (bitField0_ & ~0x00000001);
         onChanged();
         return this;
       }
@@ -775,7 +627,7 @@ public final class Fantasy {
         if (value == null) { throw new NullPointerException(); }
         checkByteStringIsUtf8(value);
         location_ = value;
-        bitField0_ |= 0x00000002;
+        bitField0_ |= 0x00000001;
         onChanged();
         return this;
       }
@@ -848,18 +700,6 @@ public final class Fantasy {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>string subscriptionId = 1;</code>
-     * @return The subscriptionId.
-     */
-    java.lang.String getSubscriptionId();
-    /**
-     * <code>string subscriptionId = 1;</code>
-     * @return The bytes for subscriptionId.
-     */
-    com.google.protobuf.ByteString
-        getSubscriptionIdBytes();
-
-    /**
      * <code>string location = 2;</code>
      * @return The location.
      */
@@ -884,7 +724,6 @@ public final class Fantasy {
       super(builder);
     }
     private Unsubscribe() {
-      subscriptionId_ = "";
       location_ = "";
     }
 
@@ -911,45 +750,6 @@ public final class Fantasy {
       return fantasy.Fantasy.internal_static_fantasy_Unsubscribe_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               fantasy.Fantasy.Unsubscribe.class, fantasy.Fantasy.Unsubscribe.Builder.class);
-    }
-
-    public static final int SUBSCRIPTIONID_FIELD_NUMBER = 1;
-    @SuppressWarnings("serial")
-    private volatile java.lang.Object subscriptionId_ = "";
-    /**
-     * <code>string subscriptionId = 1;</code>
-     * @return The subscriptionId.
-     */
-    @java.lang.Override
-    public java.lang.String getSubscriptionId() {
-      java.lang.Object ref = subscriptionId_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        subscriptionId_ = s;
-        return s;
-      }
-    }
-    /**
-     * <code>string subscriptionId = 1;</code>
-     * @return The bytes for subscriptionId.
-     */
-    @java.lang.Override
-    public com.google.protobuf.ByteString
-        getSubscriptionIdBytes() {
-      java.lang.Object ref = subscriptionId_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        subscriptionId_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
     }
 
     public static final int LOCATION_FIELD_NUMBER = 2;
@@ -1005,9 +805,6 @@ public final class Fantasy {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(subscriptionId_)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, subscriptionId_);
-      }
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(location_)) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 2, location_);
       }
@@ -1020,9 +817,6 @@ public final class Fantasy {
       if (size != -1) return size;
 
       size = 0;
-      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(subscriptionId_)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, subscriptionId_);
-      }
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(location_)) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, location_);
       }
@@ -1041,8 +835,6 @@ public final class Fantasy {
       }
       fantasy.Fantasy.Unsubscribe other = (fantasy.Fantasy.Unsubscribe) obj;
 
-      if (!getSubscriptionId()
-          .equals(other.getSubscriptionId())) return false;
       if (!getLocation()
           .equals(other.getLocation())) return false;
       if (!getUnknownFields().equals(other.getUnknownFields())) return false;
@@ -1056,8 +848,6 @@ public final class Fantasy {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (37 * hash) + SUBSCRIPTIONID_FIELD_NUMBER;
-      hash = (53 * hash) + getSubscriptionId().hashCode();
       hash = (37 * hash) + LOCATION_FIELD_NUMBER;
       hash = (53 * hash) + getLocation().hashCode();
       hash = (29 * hash) + getUnknownFields().hashCode();
@@ -1189,7 +979,6 @@ public final class Fantasy {
       public Builder clear() {
         super.clear();
         bitField0_ = 0;
-        subscriptionId_ = "";
         location_ = "";
         return this;
       }
@@ -1225,9 +1014,6 @@ public final class Fantasy {
       private void buildPartial0(fantasy.Fantasy.Unsubscribe result) {
         int from_bitField0_ = bitField0_;
         if (((from_bitField0_ & 0x00000001) != 0)) {
-          result.subscriptionId_ = subscriptionId_;
-        }
-        if (((from_bitField0_ & 0x00000002) != 0)) {
           result.location_ = location_;
         }
       }
@@ -1276,14 +1062,9 @@ public final class Fantasy {
 
       public Builder mergeFrom(fantasy.Fantasy.Unsubscribe other) {
         if (other == fantasy.Fantasy.Unsubscribe.getDefaultInstance()) return this;
-        if (!other.getSubscriptionId().isEmpty()) {
-          subscriptionId_ = other.subscriptionId_;
-          bitField0_ |= 0x00000001;
-          onChanged();
-        }
         if (!other.getLocation().isEmpty()) {
           location_ = other.location_;
-          bitField0_ |= 0x00000002;
+          bitField0_ |= 0x00000001;
           onChanged();
         }
         this.mergeUnknownFields(other.getUnknownFields());
@@ -1312,14 +1093,9 @@ public final class Fantasy {
               case 0:
                 done = true;
                 break;
-              case 10: {
-                subscriptionId_ = input.readStringRequireUtf8();
-                bitField0_ |= 0x00000001;
-                break;
-              } // case 10
               case 18: {
                 location_ = input.readStringRequireUtf8();
-                bitField0_ |= 0x00000002;
+                bitField0_ |= 0x00000001;
                 break;
               } // case 18
               default: {
@@ -1338,78 +1114,6 @@ public final class Fantasy {
         return this;
       }
       private int bitField0_;
-
-      private java.lang.Object subscriptionId_ = "";
-      /**
-       * <code>string subscriptionId = 1;</code>
-       * @return The subscriptionId.
-       */
-      public java.lang.String getSubscriptionId() {
-        java.lang.Object ref = subscriptionId_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          subscriptionId_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>string subscriptionId = 1;</code>
-       * @return The bytes for subscriptionId.
-       */
-      public com.google.protobuf.ByteString
-          getSubscriptionIdBytes() {
-        java.lang.Object ref = subscriptionId_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          subscriptionId_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>string subscriptionId = 1;</code>
-       * @param value The subscriptionId to set.
-       * @return This builder for chaining.
-       */
-      public Builder setSubscriptionId(
-          java.lang.String value) {
-        if (value == null) { throw new NullPointerException(); }
-        subscriptionId_ = value;
-        bitField0_ |= 0x00000001;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string subscriptionId = 1;</code>
-       * @return This builder for chaining.
-       */
-      public Builder clearSubscriptionId() {
-        subscriptionId_ = getDefaultInstance().getSubscriptionId();
-        bitField0_ = (bitField0_ & ~0x00000001);
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string subscriptionId = 1;</code>
-       * @param value The bytes for subscriptionId to set.
-       * @return This builder for chaining.
-       */
-      public Builder setSubscriptionIdBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) { throw new NullPointerException(); }
-        checkByteStringIsUtf8(value);
-        subscriptionId_ = value;
-        bitField0_ |= 0x00000001;
-        onChanged();
-        return this;
-      }
 
       private java.lang.Object location_ = "";
       /**
@@ -1454,7 +1158,7 @@ public final class Fantasy {
           java.lang.String value) {
         if (value == null) { throw new NullPointerException(); }
         location_ = value;
-        bitField0_ |= 0x00000002;
+        bitField0_ |= 0x00000001;
         onChanged();
         return this;
       }
@@ -1464,7 +1168,7 @@ public final class Fantasy {
        */
       public Builder clearLocation() {
         location_ = getDefaultInstance().getLocation();
-        bitField0_ = (bitField0_ & ~0x00000002);
+        bitField0_ = (bitField0_ & ~0x00000001);
         onChanged();
         return this;
       }
@@ -1478,7 +1182,7 @@ public final class Fantasy {
         if (value == null) { throw new NullPointerException(); }
         checkByteStringIsUtf8(value);
         location_ = value;
-        bitField0_ |= 0x00000002;
+        bitField0_ |= 0x00000001;
         onChanged();
         return this;
       }
@@ -4449,23 +4153,21 @@ public final class Fantasy {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\rfantasy.proto\022\007fantasy\"5\n\tSubscribe\022\026\n" +
-      "\016subscriptionId\030\001 \001(\t\022\020\n\010location\030\002 \001(\t\"" +
-      "7\n\013Unsubscribe\022\026\n\016subscriptionId\030\001 \001(\t\022\020" +
-      "\n\010location\030\002 \001(\t\"#\n\tReconnect\022\026\n\016subscri" +
-      "ptionId\030\001 \001(\t\"\204\001\n\016ControlRequest\022!\n\003sub\030" +
-      "\001 \001(\0132\022.fantasy.SubscribeH\000\022%\n\005unsub\030\002 \001" +
-      "(\0132\024.fantasy.UnsubscribeH\000\022!\n\003rec\030\003 \001(\0132" +
-      "\022.fantasy.ReconnectH\000B\005\n\003req\"\241\001\n\014Fantasy" +
-      "Event\022\020\n\010location\030\001 \001(\t\022\023\n\013description\030\002" +
-      " \001(\t\022\020\n\010factions\030\003 \003(\t\022\024\n\014minimumLevel\030\004" +
-      " \001(\005\022\024\n\014maximumLevel\030\005 \001(\005\022,\n\teventType\030" +
-      "\006 \001(\0162\031.fantasy.FantasyEventType*F\n\020Fant" +
-      "asyEventType\022\013\n\007UNKNOWN\020\000\022\n\n\006BATTLE\020\001\022\013\n" +
-      "\007DUNGEON\020\002\022\014\n\010FESTIVAL\020\0032W\n\021FantasySubsc" +
-      "riber\022B\n\014StreamEvents\022\027.fantasy.ControlR" +
-      "equest\032\025.fantasy.FantasyEvent(\0010\001b\006proto" +
-      "3"
+      "\n\rfantasy.proto\022\007fantasy\"\035\n\tSubscribe\022\020\n" +
+      "\010location\030\002 \001(\t\"\037\n\013Unsubscribe\022\020\n\010locati" +
+      "on\030\002 \001(\t\"#\n\tReconnect\022\026\n\016subscriptionId\030" +
+      "\001 \001(\t\"\204\001\n\016ControlRequest\022!\n\003sub\030\001 \001(\0132\022." +
+      "fantasy.SubscribeH\000\022%\n\005unsub\030\002 \001(\0132\024.fan" +
+      "tasy.UnsubscribeH\000\022!\n\003rec\030\003 \001(\0132\022.fantas" +
+      "y.ReconnectH\000B\005\n\003req\"\241\001\n\014FantasyEvent\022\020\n" +
+      "\010location\030\001 \001(\t\022\023\n\013description\030\002 \001(\t\022\020\n\010" +
+      "factions\030\003 \003(\t\022\024\n\014minimumLevel\030\004 \001(\005\022\024\n\014" +
+      "maximumLevel\030\005 \001(\005\022,\n\teventType\030\006 \001(\0162\031." +
+      "fantasy.FantasyEventType*F\n\020FantasyEvent" +
+      "Type\022\013\n\007UNKNOWN\020\000\022\n\n\006BATTLE\020\001\022\013\n\007DUNGEON" +
+      "\020\002\022\014\n\010FESTIVAL\020\0032W\n\021FantasySubscriber\022B\n" +
+      "\014StreamEvents\022\027.fantasy.ControlRequest\032\025" +
+      ".fantasy.FantasyEvent(\0010\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -4476,13 +4178,13 @@ public final class Fantasy {
     internal_static_fantasy_Subscribe_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_fantasy_Subscribe_descriptor,
-        new java.lang.String[] { "SubscriptionId", "Location", });
+        new java.lang.String[] { "Location", });
     internal_static_fantasy_Unsubscribe_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_fantasy_Unsubscribe_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_fantasy_Unsubscribe_descriptor,
-        new java.lang.String[] { "SubscriptionId", "Location", });
+        new java.lang.String[] { "Location", });
     internal_static_fantasy_Reconnect_descriptor =
       getDescriptor().getMessageTypes().get(2);
     internal_static_fantasy_Reconnect_fieldAccessorTable = new
