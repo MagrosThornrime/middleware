@@ -24,25 +24,27 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\rfantasy.proto\x12\x07\x66\x61ntasy\"\x1d\n\tSubscribe\x12\x10\n\x08location\x18\x02 \x01(\t\"\x1f\n\x0bUnsubscribe\x12\x10\n\x08location\x18\x02 \x01(\t\"#\n\tReconnect\x12\x16\n\x0esubscriptionId\x18\x01 \x01(\t\"\x84\x01\n\x0e\x43ontrolRequest\x12!\n\x03sub\x18\x01 \x01(\x0b\x32\x12.fantasy.SubscribeH\x00\x12%\n\x05unsub\x18\x02 \x01(\x0b\x32\x14.fantasy.UnsubscribeH\x00\x12!\n\x03rec\x18\x03 \x01(\x0b\x32\x12.fantasy.ReconnectH\x00\x42\x05\n\x03req\"\xa1\x01\n\x0c\x46\x61ntasyEvent\x12\x10\n\x08location\x18\x01 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x02 \x01(\t\x12\x10\n\x08\x66\x61\x63tions\x18\x03 \x03(\t\x12\x14\n\x0cminimumLevel\x18\x04 \x01(\x05\x12\x14\n\x0cmaximumLevel\x18\x05 \x01(\x05\x12,\n\teventType\x18\x06 \x01(\x0e\x32\x19.fantasy.FantasyEventType*F\n\x10\x46\x61ntasyEventType\x12\x0b\n\x07UNKNOWN\x10\x00\x12\n\n\x06\x42\x41TTLE\x10\x01\x12\x0b\n\x07\x44UNGEON\x10\x02\x12\x0c\n\x08\x46\x45STIVAL\x10\x03\x32W\n\x11\x46\x61ntasySubscriber\x12\x42\n\x0cStreamEvents\x12\x17.fantasy.ControlRequest\x1a\x15.fantasy.FantasyEvent(\x01\x30\x01\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\rfantasy.proto\x12\x07\x66\x61ntasy\"\x1d\n\tSubscribe\x12\x10\n\x08location\x18\x02 \x01(\t\"\x1f\n\x0bUnsubscribe\x12\x10\n\x08location\x18\x02 \x01(\t\"#\n\tReconnect\x12\x16\n\x0esubscriptionId\x18\x01 \x01(\t\"\x0c\n\nDisconnect\"\xa8\x01\n\x0e\x43ontrolRequest\x12!\n\x03sub\x18\x01 \x01(\x0b\x32\x12.fantasy.SubscribeH\x00\x12%\n\x05unsub\x18\x02 \x01(\x0b\x32\x14.fantasy.UnsubscribeH\x00\x12!\n\x03rec\x18\x03 \x01(\x0b\x32\x12.fantasy.ReconnectH\x00\x12\"\n\x03\x64is\x18\x04 \x01(\x0b\x32\x13.fantasy.DisconnectH\x00\x42\x05\n\x03req\"\xa1\x01\n\x0c\x46\x61ntasyEvent\x12\x10\n\x08location\x18\x01 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x02 \x01(\t\x12\x10\n\x08\x66\x61\x63tions\x18\x03 \x03(\t\x12\x14\n\x0cminimumLevel\x18\x04 \x01(\x05\x12\x14\n\x0cmaximumLevel\x18\x05 \x01(\x05\x12,\n\teventType\x18\x06 \x01(\x0e\x32\x19.fantasy.FantasyEventType*F\n\x10\x46\x61ntasyEventType\x12\x0b\n\x07UNKNOWN\x10\x00\x12\n\n\x06\x42\x41TTLE\x10\x01\x12\x0b\n\x07\x44UNGEON\x10\x02\x12\x0c\n\x08\x46\x45STIVAL\x10\x03\x32W\n\x11\x46\x61ntasySubscriber\x12\x42\n\x0cStreamEvents\x12\x17.fantasy.ControlRequest\x1a\x15.fantasy.FantasyEvent(\x01\x30\x01\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'fantasy_pb2', _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
   DESCRIPTOR._loaded_options = None
-  _globals['_FANTASYEVENTTYPE']._serialized_start=426
-  _globals['_FANTASYEVENTTYPE']._serialized_end=496
+  _globals['_FANTASYEVENTTYPE']._serialized_start=476
+  _globals['_FANTASYEVENTTYPE']._serialized_end=546
   _globals['_SUBSCRIBE']._serialized_start=26
   _globals['_SUBSCRIBE']._serialized_end=55
   _globals['_UNSUBSCRIBE']._serialized_start=57
   _globals['_UNSUBSCRIBE']._serialized_end=88
   _globals['_RECONNECT']._serialized_start=90
   _globals['_RECONNECT']._serialized_end=125
-  _globals['_CONTROLREQUEST']._serialized_start=128
-  _globals['_CONTROLREQUEST']._serialized_end=260
-  _globals['_FANTASYEVENT']._serialized_start=263
-  _globals['_FANTASYEVENT']._serialized_end=424
-  _globals['_FANTASYSUBSCRIBER']._serialized_start=498
-  _globals['_FANTASYSUBSCRIBER']._serialized_end=585
+  _globals['_DISCONNECT']._serialized_start=127
+  _globals['_DISCONNECT']._serialized_end=139
+  _globals['_CONTROLREQUEST']._serialized_start=142
+  _globals['_CONTROLREQUEST']._serialized_end=310
+  _globals['_FANTASYEVENT']._serialized_start=313
+  _globals['_FANTASYEVENT']._serialized_end=474
+  _globals['_FANTASYSUBSCRIBER']._serialized_start=548
+  _globals['_FANTASYSUBSCRIBER']._serialized_end=635
 # @@protoc_insertion_point(module_scope)

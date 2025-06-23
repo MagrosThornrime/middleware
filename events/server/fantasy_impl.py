@@ -31,22 +31,24 @@ class FantasyImpl(fantasy_grpc.FantasySubscriberServicer):
                             await context.write(event)
         asyncio.create_task(_task())
 
-    def load_from_json(self):
+    async def load_from_json(self):
         if not os.path.exists("data.json"):
             with open("data.json", 'w') as f:
                 json.dump({}, f, indent=2)
         
         with open("data.json", "r") as f:
-            self._subscriptions = json.load(f)
+            async with self._lock:
+                self._subscriptions = json.load(f)
 
-    def save_to_json(self):
+    async def save_to_json(self):
         with open("data.json", 'w') as f:
-            json.dump(self._subscriptions, f, indent=2)
+            async with self._lock:
+                json.dump(self._subscriptions, f, indent=2)
 
     async def StreamEvents(self, request_iterator, context):
         print("Fantasy: subscription stream started")
 
-        self.load_from_json()
+        await self.load_from_json()
         print(self._subscriptions)
         
         user = None
@@ -80,19 +82,21 @@ class FantasyImpl(fantasy_grpc.FantasySubscriberServicer):
                             print(f"User {user} already active")
                             return
                     print(f"Subscriber connected: {user}")
-
+                elif request.HasField("dis"):
+                    async with self._lock:
+                        if user:
+                            del self._subscriptions[user]
+                    print(f"User disconnected: {user}")
                 else:
                     print("Fantasy: received unknown control request")
 
                 print(self._subscriptions)
-                self.save_to_json()
+                await self.save_to_json()
 
         except Exception as ex:
             print(f"Fantasy: error while streaming: {ex}")
 
-        print("Fantasy: subscription stream ended")
         async with self._lock:
-            if user:
-                del self._subscriptions[user]
-                del self._contexts[user]
-        self.save_to_json()
+            del self._contexts[user]
+
+        print("Fantasy: subscription stream ended")

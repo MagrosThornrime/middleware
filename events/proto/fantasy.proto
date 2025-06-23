@@ -14,11 +14,14 @@ message Reconnect {
   string subscriptionId = 1;
 }
 
+message Disconnect {}
+
 message ControlRequest {
   oneof req {
     Subscribe sub = 1;
     Unsubscribe unsub = 2;
     Reconnect rec = 3;
+    Disconnect dis = 4;
   }
 }
 

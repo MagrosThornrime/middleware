@@ -38,10 +38,6 @@ public class FantasyClient {
 		while ((line = reader.readLine()) != null) {
 			line = line.trim();
 
-			if (line.equalsIgnoreCase("x")) {
-				break;
-			}
-
 			if (requestObserver == null) {
 				System.out.println("Not connected. Please wait...");
 				continue;
@@ -63,8 +59,13 @@ public class FantasyClient {
 							.build();
 					Fantasy.ControlRequest req = Fantasy.ControlRequest.newBuilder().setUnsub(unsub).build();
 					requestObserver.onNext(req);
-
-				} else {
+				} else if (line.startsWith("x")) {
+					Fantasy.Disconnect dis = Fantasy.Disconnect.newBuilder().build();
+					Fantasy.ControlRequest req = Fantasy.ControlRequest.newBuilder().setDis(dis).build();
+					requestObserver.onNext(req);
+					break;
+				}
+				else {
 					System.out.println("Unknown command");
 				}
 			} catch (Exception e) {
@@ -133,7 +134,12 @@ public class FantasyClient {
 				public void onCompleted() {
 					System.out.println("Stream closed by server.");
 					requestObserver = null;
-				}
+                    try {
+                        shutdown();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
 			};
 
 			requestObserver = stub.streamEvents(responseObserver);
@@ -163,7 +169,8 @@ public class FantasyClient {
 	}
 
 	// Clean up resources on shutdown
-	private static void shutdown() {
+	private static void shutdown() throws InterruptedException {
+		Thread.sleep(1000);
 		if (requestObserver != null) {
 			try {
 				requestObserver.onCompleted();
@@ -175,5 +182,6 @@ public class FantasyClient {
 				channel.awaitTermination(5, java.util.concurrent.TimeUnit.SECONDS);
 			} catch (InterruptedException ignored) {}
 		}
+		System.exit(0);
 	}
 }

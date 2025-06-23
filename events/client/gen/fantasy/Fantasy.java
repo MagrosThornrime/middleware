@@ -1805,6 +1805,406 @@ public final class Fantasy {
 
   }
 
+  public interface DisconnectOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:fantasy.Disconnect)
+      com.google.protobuf.MessageOrBuilder {
+  }
+  /**
+   * Protobuf type {@code fantasy.Disconnect}
+   */
+  public static final class Disconnect extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:fantasy.Disconnect)
+      DisconnectOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use Disconnect.newBuilder() to construct.
+    private Disconnect(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private Disconnect() {
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new Disconnect();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return fantasy.Fantasy.internal_static_fantasy_Disconnect_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return fantasy.Fantasy.internal_static_fantasy_Disconnect_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              fantasy.Fantasy.Disconnect.class, fantasy.Fantasy.Disconnect.Builder.class);
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getUnknownFields().writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      size += getUnknownFields().getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof fantasy.Fantasy.Disconnect)) {
+        return super.equals(obj);
+      }
+      fantasy.Fantasy.Disconnect other = (fantasy.Fantasy.Disconnect) obj;
+
+      if (!getUnknownFields().equals(other.getUnknownFields())) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (29 * hash) + getUnknownFields().hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static fantasy.Fantasy.Disconnect parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static fantasy.Fantasy.Disconnect parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static fantasy.Fantasy.Disconnect parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static fantasy.Fantasy.Disconnect parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static fantasy.Fantasy.Disconnect parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static fantasy.Fantasy.Disconnect parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static fantasy.Fantasy.Disconnect parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static fantasy.Fantasy.Disconnect parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static fantasy.Fantasy.Disconnect parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static fantasy.Fantasy.Disconnect parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static fantasy.Fantasy.Disconnect parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static fantasy.Fantasy.Disconnect parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(fantasy.Fantasy.Disconnect prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code fantasy.Disconnect}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:fantasy.Disconnect)
+        fantasy.Fantasy.DisconnectOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return fantasy.Fantasy.internal_static_fantasy_Disconnect_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return fantasy.Fantasy.internal_static_fantasy_Disconnect_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                fantasy.Fantasy.Disconnect.class, fantasy.Fantasy.Disconnect.Builder.class);
+      }
+
+      // Construct using fantasy.Fantasy.Disconnect.newBuilder()
+      private Builder() {
+
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return fantasy.Fantasy.internal_static_fantasy_Disconnect_descriptor;
+      }
+
+      @java.lang.Override
+      public fantasy.Fantasy.Disconnect getDefaultInstanceForType() {
+        return fantasy.Fantasy.Disconnect.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public fantasy.Fantasy.Disconnect build() {
+        fantasy.Fantasy.Disconnect result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public fantasy.Fantasy.Disconnect buildPartial() {
+        fantasy.Fantasy.Disconnect result = new fantasy.Fantasy.Disconnect(this);
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof fantasy.Fantasy.Disconnect) {
+          return mergeFrom((fantasy.Fantasy.Disconnect)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(fantasy.Fantasy.Disconnect other) {
+        if (other == fantasy.Fantasy.Disconnect.getDefaultInstance()) return this;
+        this.mergeUnknownFields(other.getUnknownFields());
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        if (extensionRegistry == null) {
+          throw new java.lang.NullPointerException();
+        }
+        try {
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              default: {
+                if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                  done = true; // was an endgroup tag
+                }
+                break;
+              } // default:
+            } // switch (tag)
+          } // while (!done)
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.unwrapIOException();
+        } finally {
+          onChanged();
+        } // finally
+        return this;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:fantasy.Disconnect)
+    }
+
+    // @@protoc_insertion_point(class_scope:fantasy.Disconnect)
+    private static final fantasy.Fantasy.Disconnect DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new fantasy.Fantasy.Disconnect();
+    }
+
+    public static fantasy.Fantasy.Disconnect getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<Disconnect>
+        PARSER = new com.google.protobuf.AbstractParser<Disconnect>() {
+      @java.lang.Override
+      public Disconnect parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        Builder builder = newBuilder();
+        try {
+          builder.mergeFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(builder.buildPartial());
+        } catch (com.google.protobuf.UninitializedMessageException e) {
+          throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(e)
+              .setUnfinishedMessage(builder.buildPartial());
+        }
+        return builder.buildPartial();
+      }
+    };
+
+    public static com.google.protobuf.Parser<Disconnect> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<Disconnect> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public fantasy.Fantasy.Disconnect getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
   public interface ControlRequestOrBuilder extends
       // @@protoc_insertion_point(interface_extends:fantasy.ControlRequest)
       com.google.protobuf.MessageOrBuilder {
@@ -1853,6 +2253,21 @@ public final class Fantasy {
      * <code>.fantasy.Reconnect rec = 3;</code>
      */
     fantasy.Fantasy.ReconnectOrBuilder getRecOrBuilder();
+
+    /**
+     * <code>.fantasy.Disconnect dis = 4;</code>
+     * @return Whether the dis field is set.
+     */
+    boolean hasDis();
+    /**
+     * <code>.fantasy.Disconnect dis = 4;</code>
+     * @return The dis.
+     */
+    fantasy.Fantasy.Disconnect getDis();
+    /**
+     * <code>.fantasy.Disconnect dis = 4;</code>
+     */
+    fantasy.Fantasy.DisconnectOrBuilder getDisOrBuilder();
 
     public fantasy.Fantasy.ControlRequest.ReqCase getReqCase();
   }
@@ -1904,6 +2319,7 @@ public final class Fantasy {
       SUB(1),
       UNSUB(2),
       REC(3),
+      DIS(4),
       REQ_NOT_SET(0);
       private final int value;
       private ReqCase(int value) {
@@ -1924,6 +2340,7 @@ public final class Fantasy {
           case 1: return SUB;
           case 2: return UNSUB;
           case 3: return REC;
+          case 4: return DIS;
           case 0: return REQ_NOT_SET;
           default: return null;
         }
@@ -2032,6 +2449,37 @@ public final class Fantasy {
       return fantasy.Fantasy.Reconnect.getDefaultInstance();
     }
 
+    public static final int DIS_FIELD_NUMBER = 4;
+    /**
+     * <code>.fantasy.Disconnect dis = 4;</code>
+     * @return Whether the dis field is set.
+     */
+    @java.lang.Override
+    public boolean hasDis() {
+      return reqCase_ == 4;
+    }
+    /**
+     * <code>.fantasy.Disconnect dis = 4;</code>
+     * @return The dis.
+     */
+    @java.lang.Override
+    public fantasy.Fantasy.Disconnect getDis() {
+      if (reqCase_ == 4) {
+         return (fantasy.Fantasy.Disconnect) req_;
+      }
+      return fantasy.Fantasy.Disconnect.getDefaultInstance();
+    }
+    /**
+     * <code>.fantasy.Disconnect dis = 4;</code>
+     */
+    @java.lang.Override
+    public fantasy.Fantasy.DisconnectOrBuilder getDisOrBuilder() {
+      if (reqCase_ == 4) {
+         return (fantasy.Fantasy.Disconnect) req_;
+      }
+      return fantasy.Fantasy.Disconnect.getDefaultInstance();
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -2055,6 +2503,9 @@ public final class Fantasy {
       if (reqCase_ == 3) {
         output.writeMessage(3, (fantasy.Fantasy.Reconnect) req_);
       }
+      if (reqCase_ == 4) {
+        output.writeMessage(4, (fantasy.Fantasy.Disconnect) req_);
+      }
       getUnknownFields().writeTo(output);
     }
 
@@ -2075,6 +2526,10 @@ public final class Fantasy {
       if (reqCase_ == 3) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(3, (fantasy.Fantasy.Reconnect) req_);
+      }
+      if (reqCase_ == 4) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(4, (fantasy.Fantasy.Disconnect) req_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
@@ -2105,6 +2560,10 @@ public final class Fantasy {
           if (!getRec()
               .equals(other.getRec())) return false;
           break;
+        case 4:
+          if (!getDis()
+              .equals(other.getDis())) return false;
+          break;
         case 0:
         default:
       }
@@ -2131,6 +2590,10 @@ public final class Fantasy {
         case 3:
           hash = (37 * hash) + REC_FIELD_NUMBER;
           hash = (53 * hash) + getRec().hashCode();
+          break;
+        case 4:
+          hash = (37 * hash) + DIS_FIELD_NUMBER;
+          hash = (53 * hash) + getDis().hashCode();
           break;
         case 0:
         default:
@@ -2273,6 +2736,9 @@ public final class Fantasy {
         if (recBuilder_ != null) {
           recBuilder_.clear();
         }
+        if (disBuilder_ != null) {
+          disBuilder_.clear();
+        }
         reqCase_ = 0;
         req_ = null;
         return this;
@@ -2325,6 +2791,10 @@ public final class Fantasy {
         if (reqCase_ == 3 &&
             recBuilder_ != null) {
           result.req_ = recBuilder_.build();
+        }
+        if (reqCase_ == 4 &&
+            disBuilder_ != null) {
+          result.req_ = disBuilder_.build();
         }
       }
 
@@ -2385,6 +2855,10 @@ public final class Fantasy {
             mergeRec(other.getRec());
             break;
           }
+          case DIS: {
+            mergeDis(other.getDis());
+            break;
+          }
           case REQ_NOT_SET: {
             break;
           }
@@ -2436,6 +2910,13 @@ public final class Fantasy {
                 reqCase_ = 3;
                 break;
               } // case 26
+              case 34: {
+                input.readMessage(
+                    getDisFieldBuilder().getBuilder(),
+                    extensionRegistry);
+                reqCase_ = 4;
+                break;
+              } // case 34
               default: {
                 if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                   done = true; // was an endgroup tag
@@ -2892,6 +3373,148 @@ public final class Fantasy {
         reqCase_ = 3;
         onChanged();
         return recBuilder_;
+      }
+
+      private com.google.protobuf.SingleFieldBuilderV3<
+          fantasy.Fantasy.Disconnect, fantasy.Fantasy.Disconnect.Builder, fantasy.Fantasy.DisconnectOrBuilder> disBuilder_;
+      /**
+       * <code>.fantasy.Disconnect dis = 4;</code>
+       * @return Whether the dis field is set.
+       */
+      @java.lang.Override
+      public boolean hasDis() {
+        return reqCase_ == 4;
+      }
+      /**
+       * <code>.fantasy.Disconnect dis = 4;</code>
+       * @return The dis.
+       */
+      @java.lang.Override
+      public fantasy.Fantasy.Disconnect getDis() {
+        if (disBuilder_ == null) {
+          if (reqCase_ == 4) {
+            return (fantasy.Fantasy.Disconnect) req_;
+          }
+          return fantasy.Fantasy.Disconnect.getDefaultInstance();
+        } else {
+          if (reqCase_ == 4) {
+            return disBuilder_.getMessage();
+          }
+          return fantasy.Fantasy.Disconnect.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>.fantasy.Disconnect dis = 4;</code>
+       */
+      public Builder setDis(fantasy.Fantasy.Disconnect value) {
+        if (disBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          req_ = value;
+          onChanged();
+        } else {
+          disBuilder_.setMessage(value);
+        }
+        reqCase_ = 4;
+        return this;
+      }
+      /**
+       * <code>.fantasy.Disconnect dis = 4;</code>
+       */
+      public Builder setDis(
+          fantasy.Fantasy.Disconnect.Builder builderForValue) {
+        if (disBuilder_ == null) {
+          req_ = builderForValue.build();
+          onChanged();
+        } else {
+          disBuilder_.setMessage(builderForValue.build());
+        }
+        reqCase_ = 4;
+        return this;
+      }
+      /**
+       * <code>.fantasy.Disconnect dis = 4;</code>
+       */
+      public Builder mergeDis(fantasy.Fantasy.Disconnect value) {
+        if (disBuilder_ == null) {
+          if (reqCase_ == 4 &&
+              req_ != fantasy.Fantasy.Disconnect.getDefaultInstance()) {
+            req_ = fantasy.Fantasy.Disconnect.newBuilder((fantasy.Fantasy.Disconnect) req_)
+                .mergeFrom(value).buildPartial();
+          } else {
+            req_ = value;
+          }
+          onChanged();
+        } else {
+          if (reqCase_ == 4) {
+            disBuilder_.mergeFrom(value);
+          } else {
+            disBuilder_.setMessage(value);
+          }
+        }
+        reqCase_ = 4;
+        return this;
+      }
+      /**
+       * <code>.fantasy.Disconnect dis = 4;</code>
+       */
+      public Builder clearDis() {
+        if (disBuilder_ == null) {
+          if (reqCase_ == 4) {
+            reqCase_ = 0;
+            req_ = null;
+            onChanged();
+          }
+        } else {
+          if (reqCase_ == 4) {
+            reqCase_ = 0;
+            req_ = null;
+          }
+          disBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>.fantasy.Disconnect dis = 4;</code>
+       */
+      public fantasy.Fantasy.Disconnect.Builder getDisBuilder() {
+        return getDisFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>.fantasy.Disconnect dis = 4;</code>
+       */
+      @java.lang.Override
+      public fantasy.Fantasy.DisconnectOrBuilder getDisOrBuilder() {
+        if ((reqCase_ == 4) && (disBuilder_ != null)) {
+          return disBuilder_.getMessageOrBuilder();
+        } else {
+          if (reqCase_ == 4) {
+            return (fantasy.Fantasy.Disconnect) req_;
+          }
+          return fantasy.Fantasy.Disconnect.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>.fantasy.Disconnect dis = 4;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          fantasy.Fantasy.Disconnect, fantasy.Fantasy.Disconnect.Builder, fantasy.Fantasy.DisconnectOrBuilder> 
+          getDisFieldBuilder() {
+        if (disBuilder_ == null) {
+          if (!(reqCase_ == 4)) {
+            req_ = fantasy.Fantasy.Disconnect.getDefaultInstance();
+          }
+          disBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              fantasy.Fantasy.Disconnect, fantasy.Fantasy.Disconnect.Builder, fantasy.Fantasy.DisconnectOrBuilder>(
+                  (fantasy.Fantasy.Disconnect) req_,
+                  getParentForChildren(),
+                  isClean());
+          req_ = null;
+        }
+        reqCase_ = 4;
+        onChanged();
+        return disBuilder_;
       }
       @java.lang.Override
       public final Builder setUnknownFields(
@@ -4135,6 +4758,11 @@ public final class Fantasy {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_fantasy_Reconnect_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_fantasy_Disconnect_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_fantasy_Disconnect_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_fantasy_ControlRequest_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
@@ -4156,18 +4784,20 @@ public final class Fantasy {
       "\n\rfantasy.proto\022\007fantasy\"\035\n\tSubscribe\022\020\n" +
       "\010location\030\002 \001(\t\"\037\n\013Unsubscribe\022\020\n\010locati" +
       "on\030\002 \001(\t\"#\n\tReconnect\022\026\n\016subscriptionId\030" +
-      "\001 \001(\t\"\204\001\n\016ControlRequest\022!\n\003sub\030\001 \001(\0132\022." +
-      "fantasy.SubscribeH\000\022%\n\005unsub\030\002 \001(\0132\024.fan" +
-      "tasy.UnsubscribeH\000\022!\n\003rec\030\003 \001(\0132\022.fantas" +
-      "y.ReconnectH\000B\005\n\003req\"\241\001\n\014FantasyEvent\022\020\n" +
-      "\010location\030\001 \001(\t\022\023\n\013description\030\002 \001(\t\022\020\n\010" +
-      "factions\030\003 \003(\t\022\024\n\014minimumLevel\030\004 \001(\005\022\024\n\014" +
-      "maximumLevel\030\005 \001(\005\022,\n\teventType\030\006 \001(\0162\031." +
-      "fantasy.FantasyEventType*F\n\020FantasyEvent" +
-      "Type\022\013\n\007UNKNOWN\020\000\022\n\n\006BATTLE\020\001\022\013\n\007DUNGEON" +
-      "\020\002\022\014\n\010FESTIVAL\020\0032W\n\021FantasySubscriber\022B\n" +
-      "\014StreamEvents\022\027.fantasy.ControlRequest\032\025" +
-      ".fantasy.FantasyEvent(\0010\001b\006proto3"
+      "\001 \001(\t\"\014\n\nDisconnect\"\250\001\n\016ControlRequest\022!" +
+      "\n\003sub\030\001 \001(\0132\022.fantasy.SubscribeH\000\022%\n\005uns" +
+      "ub\030\002 \001(\0132\024.fantasy.UnsubscribeH\000\022!\n\003rec\030" +
+      "\003 \001(\0132\022.fantasy.ReconnectH\000\022\"\n\003dis\030\004 \001(\013" +
+      "2\023.fantasy.DisconnectH\000B\005\n\003req\"\241\001\n\014Fanta" +
+      "syEvent\022\020\n\010location\030\001 \001(\t\022\023\n\013description" +
+      "\030\002 \001(\t\022\020\n\010factions\030\003 \003(\t\022\024\n\014minimumLevel" +
+      "\030\004 \001(\005\022\024\n\014maximumLevel\030\005 \001(\005\022,\n\teventTyp" +
+      "e\030\006 \001(\0162\031.fantasy.FantasyEventType*F\n\020Fa" +
+      "ntasyEventType\022\013\n\007UNKNOWN\020\000\022\n\n\006BATTLE\020\001\022" +
+      "\013\n\007DUNGEON\020\002\022\014\n\010FESTIVAL\020\0032W\n\021FantasySub" +
+      "scriber\022B\n\014StreamEvents\022\027.fantasy.Contro" +
+      "lRequest\032\025.fantasy.FantasyEvent(\0010\001b\006pro" +
+      "to3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -4191,14 +4821,20 @@ public final class Fantasy {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_fantasy_Reconnect_descriptor,
         new java.lang.String[] { "SubscriptionId", });
-    internal_static_fantasy_ControlRequest_descriptor =
+    internal_static_fantasy_Disconnect_descriptor =
       getDescriptor().getMessageTypes().get(3);
+    internal_static_fantasy_Disconnect_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_fantasy_Disconnect_descriptor,
+        new java.lang.String[] { });
+    internal_static_fantasy_ControlRequest_descriptor =
+      getDescriptor().getMessageTypes().get(4);
     internal_static_fantasy_ControlRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_fantasy_ControlRequest_descriptor,
-        new java.lang.String[] { "Sub", "Unsub", "Rec", "Req", });
+        new java.lang.String[] { "Sub", "Unsub", "Rec", "Dis", "Req", });
     internal_static_fantasy_FantasyEvent_descriptor =
-      getDescriptor().getMessageTypes().get(4);
+      getDescriptor().getMessageTypes().get(5);
     internal_static_fantasy_FantasyEvent_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_fantasy_FantasyEvent_descriptor,
