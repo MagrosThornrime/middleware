@@ -17,16 +17,24 @@ class FantasyImpl(fantasy_grpc.FantasySubscriberServicer):
         self._events: List[fantasy.FantasyEvent] = []
         self._subscriptions = {}
         self._contexts = {}
+        self._buffers = {}
 
     async def generate_and_send(self):
         async with self._lock:
             self._events.clear()
             for _ in range(random.randint(3, 10)):
                 self._events.append(self.generator.generate_fantasy_event())
-            for user, context in self._contexts.items():
+            for user, subs in self._subscriptions.items():
                 for event in self._events:
-                    if event.location in self._subscriptions[user]:
-                        await context.write(event)
+                    if event.location in subs:
+                        if user in self._contexts:
+                            context = self._contexts[user]
+                            for old_event in self._buffers[user]:
+                                await context.write(old_event)
+                            self._buffers[user] = []
+                            await context.write(event)
+                        else:
+                            self._buffers[user].append(event)
 
     async def load_from_json(self):
         if not os.path.exists("data.json"):
@@ -73,6 +81,8 @@ class FantasyImpl(fantasy_grpc.FantasySubscriberServicer):
                     async with self._lock:
                         if user not in self._subscriptions:
                             self._subscriptions[user] = []
+                        if user not in self._buffers:
+                            self._buffers[user] = []
                         if user not in self._contexts:
                             self._contexts[user] = context
                         else:
@@ -84,6 +94,7 @@ class FantasyImpl(fantasy_grpc.FantasySubscriberServicer):
                         if user:
                             del self._subscriptions[user]
                             del self._contexts[user]
+                            del self._buffers[user]
                     print(f"User disconnected: {user}")
                 else:
                     print("Fantasy: received unknown control request")
