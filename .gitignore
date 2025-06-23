@@ -5,3 +5,4 @@ events/server/data.json
 
 events/client/.idea/
 events/client/out/
+events/client/protoc-gen-grpc-java-1.71*
