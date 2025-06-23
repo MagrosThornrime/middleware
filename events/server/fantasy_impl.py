@@ -83,6 +83,7 @@ class FantasyImpl(fantasy_grpc.FantasySubscriberServicer):
                     async with self._lock:
                         if user:
                             del self._subscriptions[user]
+                            del self._contexts[user]
                     print(f"User disconnected: {user}")
                 else:
                     print("Fantasy: received unknown control request")
@@ -94,6 +95,7 @@ class FantasyImpl(fantasy_grpc.FantasySubscriberServicer):
             print(f"Fantasy: error while streaming: {ex}")
 
         async with self._lock:
-            del self._contexts[user]
+            if user in self._contexts:
+                del self._contexts[user]
 
         print("Fantasy: subscription stream ended")
