@@ -21,17 +21,7 @@ class GrpcServer:
         await self.server.start()
         self.logger.info(f"Server started, listening on {self.ADDRESS}:{self.PORT}")
 
-        # Handle shutdown gracefully
-        loop = asyncio.get_running_loop()
-        for sig in (signal.SIGINT, signal.SIGTERM):
-            loop.add_signal_handler(sig, lambda: asyncio.create_task(self.stop()))
-
         await self.server.wait_for_termination()
-
-    async def stop(self):
-        self.logger.info("Shutting down gRPC server...")
-        await self.server.stop(5)
-        self.logger.info("Server shut down.")
 
 async def main():
     logging.basicConfig(level=logging.INFO)
@@ -41,7 +31,7 @@ async def main():
 
 async def generate_events_loop(server):
     while True:
-        server.fantasy_impl.generate_events()
+        server.fantasy_impl.generate_and_send()
         await asyncio.sleep(4)
 
 if __name__ == '__main__':

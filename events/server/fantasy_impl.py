@@ -15,19 +15,21 @@ class FantasyImpl(fantasy_grpc.FantasySubscriberServicer):
         self.generator = EventsGenerator()
         self._lock = asyncio.Lock()
         self._events: List[fantasy.FantasyEvent] = []
-        self._subscribers = {}
-        
+        self._subscriptions = {}
+        self._contexts = {}
 
-    async def _event_match(self, event: fantasy.FantasyEvent, location: str):
-        return event.location == location
-
-    def generate_events(self):
-        async def _generate():
+    def generate_and_send(self):
+        async def _task():
             async with self._lock:
                 self._events.clear()
-                for _ in range(random.randint(1, 4)):
+                for _ in range(random.randint(3, 10)):
                     self._events.append(self.generator.generate_fantasy_event())
-        asyncio.create_task(_generate())
+            async with self._lock:
+                for user, context in self._contexts.items():
+                    for event in self._events:
+                        if event.location in self._subscriptions[user]:
+                            await context.write(event)
+        asyncio.create_task(_task())
 
     def load_from_json(self):
         if not os.path.exists("data.json"):
@@ -35,16 +37,17 @@ class FantasyImpl(fantasy_grpc.FantasySubscriberServicer):
                 json.dump({}, f, indent=2)
         
         with open("data.json", "r") as f:
-            self._subscribers = json.load(f)
+            self._subscriptions = json.load(f)
 
     def save_to_json(self):
         with open("data.json", 'w') as f:
-            json.dump(self._subscribers, f, indent=2)
+            json.dump(self._subscriptions, f, indent=2)
 
     async def StreamEvents(self, request_iterator, context):
         print("Fantasy: subscription stream started")
 
         self.load_from_json()
+        print(self._subscriptions)
         
         user = None
         try:
@@ -52,33 +55,39 @@ class FantasyImpl(fantasy_grpc.FantasySubscriberServicer):
                 if request.HasField("sub"):
                     sub = request.sub
                     location = sub.location
-                    if location not in self._subscribers[user]:
-                        self._subscribers[user].append(location)
+                    async with self._lock:
+                        if location not in self._subscriptions[user]:
+                            self._subscriptions[user].append(location)
                     print(f"Subscribe request received: id={user}, location={location}")
 
                 elif request.HasField("unsub"):
                     unsub = request.unsub
                     location = unsub.location
-                    if location in self._subscribers[user]:
-                        self._subscribers[user].remove(location)
+                    async with self._lock:
+                        if location in self._subscriptions[user]:
+                            self._subscriptions[user].remove(location)
                     print(f"Unsubscribe request received: id={user}, location={location}")
 
                 elif request.HasField("rec"):
                     rec = request.rec
                     user = rec.subscriptionId
-                    if user not in self._subscribers:
-                        self._subscribers[user] = []
+                    async with self._lock:
+                        if user not in self._subscriptions:
+                            self._subscriptions[user] = []
+                        self._contexts[user] = context
                     print(f"Subscriber connected: {user}")
 
                 else:
                     print("Fantasy: received unknown control request")
 
-                print(self._subscribers)
+                print(self._subscriptions)
                 self.save_to_json()
 
         except Exception as ex:
             print(f"Fantasy: error while streaming: {ex}")
 
         print("Fantasy: subscription stream ended")
-        del self._subscribers[user]
+        async with self._lock:
+            del self._subscriptions[user]
+            del self._contexts[user]
         self.save_to_json()
