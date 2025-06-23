@@ -22,16 +22,22 @@ class GrpcServer:
 
         await self.server.wait_for_termination()
 
+
 async def main():
     logging.basicConfig(level=logging.INFO)
     server = GrpcServer()
     asyncio.create_task(generate_events_loop(server))
     await server.start()
 
+
 async def generate_events_loop(server):
     while True:
-        server.fantasy_impl.generate_and_send()
+        await server.fantasy_impl.generate_and_send()
         await asyncio.sleep(4)
 
+
 if __name__ == '__main__':
-    asyncio.run(main())
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        print("\nServer stopped by user (Ctrl+C)")

@@ -18,24 +18,21 @@ class FantasyImpl(fantasy_grpc.FantasySubscriberServicer):
         self._subscriptions = {}
         self._contexts = {}
 
-    def generate_and_send(self):
-        async def _task():
-            async with self._lock:
-                self._events.clear()
-                for _ in range(random.randint(3, 10)):
-                    self._events.append(self.generator.generate_fantasy_event())
-            async with self._lock:
-                for user, context in self._contexts.items():
-                    for event in self._events:
-                        if event.location in self._subscriptions[user]:
-                            await context.write(event)
-        asyncio.create_task(_task())
+    async def generate_and_send(self):
+        async with self._lock:
+            self._events.clear()
+            for _ in range(random.randint(3, 10)):
+                self._events.append(self.generator.generate_fantasy_event())
+            for user, context in self._contexts.items():
+                for event in self._events:
+                    if event.location in self._subscriptions[user]:
+                        await context.write(event)
 
     async def load_from_json(self):
         if not os.path.exists("data.json"):
             with open("data.json", 'w') as f:
                 json.dump({}, f, indent=2)
-        
+
         with open("data.json", "r") as f:
             async with self._lock:
                 self._subscriptions = json.load(f)
@@ -50,7 +47,7 @@ class FantasyImpl(fantasy_grpc.FantasySubscriberServicer):
 
         await self.load_from_json()
         print(self._subscriptions)
-        
+
         user = None
         try:
             async for request in request_iterator:
